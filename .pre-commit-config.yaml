@@ -1,0 +1,50 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: mixed-line-ending
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.23.2
+    hooks:
+      - id: markdownlint-cli2
+
+  - repo: https://github.com/streetsidesoftware/cspell-cli
+    rev: v10.2.0
+    hooks:
+      - id: cspell
+
+  - repo: https://github.com/checkmake/checkmake
+    rev: v0.3.2
+    hooks:
+      - id: checkmake-system
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.6
+    hooks:
+      - id: ruff
+        args: [--fix, --preview]
+      - id: ruff-format
+        args: [--preview]
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: uv run mypy .
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: pylint
+        name: pylint (pylint-plugin)
+        entry: uv run pylint src tests
+        language: system
+        types: [python]
+        pass_filenames: false

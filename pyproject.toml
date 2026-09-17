@@ -1,0 +1,119 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "clockify-unofficial-cli"
+version = "0.2.0"
+description = "Unofficial command-line interface for Clockify, built on clockify-unofficial-sdk."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "G.A.JAGUAR", email = "dev@gajaguar.com" },
+]
+requires-python = ">=3.14"
+keywords = ["clockify", "time-tracking", "cli"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.14",
+  "Typing :: Typed",
+]
+dependencies = [
+  "clockify-unofficial-sdk",
+  "keyring>=25.0",
+  "platformdirs>=4.0",
+  "pydantic>=2.9",
+  "rich>=14.0",
+  "tomli-w>=1.0",
+  "typer>=0.16",
+]
+
+[project.scripts]
+clockify = "clockify_unofficial_cli.main:run"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/clockify_unofficial_cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov --cov-report=term-missing --cov-fail-under=90 -m 'not live'"
+markers = [
+  "live: hits the real Clockify API (requires CLOCKIFY_TEST_API_KEY)",
+]
+
+[tool.coverage.run]
+source = ["src/clockify_unofficial_cli"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 119
+lint.select = ["ALL"]
+lint.ignore = ["COM812", "CPY", "D"]
+lint.isort.section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+lint.isort.force-single-line = true
+lint.isort.case-sensitive = true
+# Typer resolves command signatures at runtime, so their annotation imports must stay real imports.
+lint.per-file-ignores."src/clockify_unofficial_cli/commands/**/*.py" = ["TC001", "TC002", "TC003"]
+lint.per-file-ignores."tests/**/*.py" = [ "ANN", "ARG", "FBT001", "PLR2004", "S101", "SLF001"]
+
+[tool.mypy]
+strict = true
+exclude = ["tests/"]
+
+[tool.pylint.main]
+load-plugins = ["checkers"]
+
+[tool.pylint.format]
+# Ruff owns formatting and line length (see [tool.ruff] line-length above).
+max-line-length = 119
+
+[tool.pylint."messages control"]
+disable = [
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "missing-function-docstring",
+  # Renderers, stores and other strategy implementations legitimately expose one method.
+  "too-few-public-methods",
+]
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/.venv", "**/node_modules", "tests"]
+
+[dependency-groups]
+dev = [
+  "mypy>=2.1.0",
+  "pylint-plugin",
+  "pylint>=4.0.5",
+  "pyright>=1.1.409",
+  "pytest>=8.0",
+  "pytest-cov>=6.0",
+  "ruff>=0.15.15",
+  "respx>=0.22",
+]
+
+[tool.uv.sources]
+pylint-plugin = { git = "https://github.com/gajaguar/pylint-plugin", tag = "v1.1.1" }
+clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v0.1.0" }
+
+[tool.uv]
+python-preference = "only-system"
+python-downloads = "never"

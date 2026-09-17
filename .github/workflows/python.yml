@@ -1,0 +1,16 @@
+name: python
+on:
+  push:
+    branches: [python]
+  pull_request:
+    branches: [python]
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v4
+      - run: pnpm install --frozen-lockfile
+      - run: uv sync --locked
+      - run: make check
+      - run: make test
