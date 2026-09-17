@@ -1,0 +1,16 @@
+name: ci
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v4
+      - run: pnpm install --frozen-lockfile
+      - run: make makefile-lint
+      - run: make md-lint
+      - run: make spell
+      - run: pre-commit run --all-files

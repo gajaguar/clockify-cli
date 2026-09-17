@@ -1,0 +1,7 @@
+[tools]
+node = "22"
+pnpm = "10"
+pre-commit = "4"
+checkmake = "0.3.2"
+python = "3.14"
+uv = "latest"
