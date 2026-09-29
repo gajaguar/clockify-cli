@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
     from rich.console import Console
 
-type Record = Mapping[str, object]  # pylint: disable=app-module-const-naming
+type Record = Mapping[str, object]  # pylint: disable=gajaguar-module-const-naming
 
 
 @dataclass(frozen=True, slots=True)
