@@ -1,3 +1,11 @@
+---
+type: reference
+title: Endpoint coverage
+description: The mapping of each Clockify OpenAPI operation to its SDK method and CLI command.
+tags: [api]
+status: stable
+---
+
 # Endpoint coverage
 
 Authoritative mapping of every non-deprecated operation in Clockify's
