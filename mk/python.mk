@@ -1,7 +1,12 @@
 UV := uv
+PYPI_DEPS := pylint-gajaguar conventional-git
+
+# Use the project's own pinned, dev-dependency copy in make commits-check
+# (defined in the base Makefile) instead of an ephemeral uvx fetch.
+CONVENTIONAL_GIT := $(UV) run conventional-git
 
 LANG_INSTALL_TARGETS    += install-python
-LANG_CHECK_TARGETS      += lint format-check typecheck pylint
+LANG_CHECK_TARGETS      += lint format-check typecheck pylint conventional-git-latest
 LANG_FIX_TARGETS        += format lint-fix
 LANG_FIX_UNSAFE_TARGETS += format lint-fix-unsafe
 LANG_TEST_TARGETS       += pytest
@@ -9,7 +14,7 @@ LANG_TEST_TARGETS       += pytest
 ##@ Python
 
 install-python: ## Sync Python deps and register console scripts
-	$(UV) sync
+	$(UV) sync $(addprefix --upgrade-package ,$(PYPI_DEPS))
 	$(UV) tool install --editable . --force
 
 lint: ## Lint with Ruff — accepts FILES="..." to limit scope
@@ -22,12 +27,17 @@ mypy: ## Type-check with mypy — accepts FILES="..." to limit scope
 	$(UV) run mypy $(or $(FILES),.)
 
 pyright: ## Type-check with Pyright — accepts FILES="..." to limit scope
-	$(UV) run pyright $(or $(FILES),.)
+	$(UV) run pyright $(FILES)
 
 typecheck: mypy pyright ## Run both type checkers
 
-pylint: ## Self-lint with this repo's own checkers (see github.com/gajaguar/pylint-plugin) — accepts FILES="..."
+pylint: ## Self-lint with this repo's own checkers (see github.com/gajaguar/pylint-gajaguar) — accepts FILES="..."
 	$(UV) run pylint $(or $(FILES),src tests)
+
+conventional-git-latest: ## Fail if the installed conventional-git is behind PyPI (skips when PyPI is unreachable)
+	@out=$$($(UV) pip list --outdated --format json 2>/dev/null) || { echo 'conventional-git-latest: PyPI unreachable, skipped'; exit 0; }; \
+	behind=$$(echo "$$out" | grep -oE '"name":"conventional-git","version":"[^"]+","latest_version":"[^"]+"' || true); \
+	test -z "$$behind" || { echo "conventional-git is behind PyPI ($$behind); run make install"; exit 1; }
 
 format: ## Format code with Ruff — accepts FILES="..." to limit scope
 	$(UV) run ruff format --preview $(or $(FILES),.)
@@ -42,7 +52,11 @@ pytest: ## Run the test suite — accepts FILES="..." to limit scope
 	$(UV) run pytest $(FILES)
 
 coverage: ## Run tests with an HTML coverage report
-	$(UV) run pytest --cov --cov-report=html
+	$(UV) run pytest --cov-report=html
 
-.PHONY: install-python lint format-check mypy pyright typecheck pylint \
-	format lint-fix lint-fix-unsafe pytest coverage
+build: ## Build the sdist and wheel into dist/
+	rm -rf dist
+	$(UV) build
+
+.PHONY: install-python lint format-check mypy pyright typecheck pylint conventional-git-latest \
+	format lint-fix lint-fix-unsafe pytest coverage build
