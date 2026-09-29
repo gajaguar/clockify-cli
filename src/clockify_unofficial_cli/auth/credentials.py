@@ -29,7 +29,7 @@ class ApiKeyCredential:
         return "*" * 8 + self.api_key[-_VISIBLE_SUFFIX:]
 
 
-type Credential = ApiKeyCredential  # pylint: disable=app-module-const-naming
+type Credential = ApiKeyCredential  # pylint: disable=gajaguar-module-const-naming
 
 
 @dataclass(frozen=True, slots=True)
