@@ -22,7 +22,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "clockify-unofficial-sdk",
+  "clockify-unofficial-sdk>=1.0,<2",
   "keyring>=25.0",
   "platformdirs>=4.0",
   "pydantic>=2.9",
