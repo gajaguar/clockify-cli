@@ -232,14 +232,8 @@ and completion criteria.
 
 ## Contributing
 
-1. Fork the repository and create a feature branch.
-2. Run `mise install && make install` to set up the toolchain.
-3. Follow the command and testing checklist in
-   [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-4. Run `make check && make test` before committing.
-5. Open a pull request describing the change and its endpoint coverage.
-
-Read [`AGENTS.md`](AGENTS.md) for repository workflow rules.
+Bug reports, ideas and pull requests are welcome; see
+[`CONTRIBUTING.md`](CONTRIBUTING.md) for the workflow.
 
 ## Security
 
