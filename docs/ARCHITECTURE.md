@@ -202,6 +202,10 @@ Request flow for a typical command:
 | **Adapter**                 | `runtime/errors.py` (`handle_errors`, `exit_code_for`)                                                           | Turns the SDK's exception hierarchy into user messages and stable exit codes in one place.                                                                               |
 | **Parameter Object**        | `GlobalOptions`, `ResolvedOptions`, `Services`, `Dataset`, `RenderTarget`                                        | Keeps signatures short. It follows the SDK's rule against silencing `too-many-arguments`.                                                                                |
 
+Command modules apply Parameter Object through `options_from`, which turns a
+dataclass of options into a Typer signature; see
+[Typer parameter objects](python/typer-parameter-objects.md).
+
 ## Project structure
 
 ```text
@@ -358,6 +362,9 @@ by `hint: <next step>`.
    - Declare options inline with `Annotated[..., typer.Option(...)]`. Typer
      can't resolve PEP 695 `type` aliases.
    - Decorate with `@APP.command(help=...)` followed by `@handle_errors`.
+     From six options up, declare them as a dataclass and add
+     `@options_from(...)` — see
+     [Typer parameter objects](python/typer-parameter-objects.md).
    - Register a new module in `main.create_app`.
 3. Put anything beyond a single SDK call (name resolution, parsing,
    multi-step flows) in `services/`.
