@@ -14,3 +14,8 @@
   `options_from` and when a command uses it.
 * **Update**: Marked Phase 1 as done in `ROADMAP.md` and flipped the Phase 1
   rows in `coverage.md`.
+
+## 2026-09-29 (Release)
+
+* **Addition**: Added `toolchain/releasing.md`, which describes the tag-driven
+  PyPI publish workflow.
