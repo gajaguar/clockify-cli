@@ -3,6 +3,6 @@
 	"private": true,
 	"devDependencies": {
 		"markdownlint-cli2": "^0.23.3",
-		"cspell": "^10.0.1"
+		"cspell": "^10.3.4"
 	}
 }
