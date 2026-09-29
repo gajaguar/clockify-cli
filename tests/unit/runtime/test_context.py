@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from typing import Final
 
 import pytest
 import respx
@@ -11,10 +12,12 @@ from rich.console import Console
 
 from clockify_unofficial_cli.auth.credentials import ApiKeyCredential
 from clockify_unofficial_cli.config.settings import GlobalOptions
+from clockify_unofficial_cli.config.settings import Profile
 from clockify_unofficial_cli.config.settings import Settings
 from clockify_unofficial_cli.config.settings import resolve_options
 from clockify_unofficial_cli.output.formats import JsonRenderer
 from clockify_unofficial_cli.output.renderer import RenderTarget
+from clockify_unofficial_cli.runtime.client_factory import ClientRequest
 from clockify_unofficial_cli.runtime.client_factory import create_sdk_client
 from clockify_unofficial_cli.runtime.context import AppContext
 from clockify_unofficial_cli.runtime.context import get_app_context
@@ -24,6 +27,8 @@ from tests.conftest import USER_PAYLOAD
 
 if TYPE_CHECKING:
     from clockify_unofficial_cli.runtime.context import Services
+
+CACHED_USER_ID: Final = USER_PAYLOAD["id"]
 
 
 def _context(services: Services, workspace: str | None = None) -> AppContext:
@@ -80,9 +85,45 @@ def test_get_app_context_requires_initialized_root() -> None:
 
 def test_sdk_client_factory_builds_client_for_region() -> None:
     # Arrange
-    credential = ApiKeyCredential(api_key="secret")
+    request = ClientRequest(credential=ApiKeyCredential(api_key="secret"), region=Region.EU_CENTRAL_1)
     # Act
-    client = create_sdk_client(credential, Region.EU_CENTRAL_1)
+    client = create_sdk_client(request)
     # Assert
     assert isinstance(client, ClockifyClient)
     client.close()
+
+
+@respx.mock
+def test_user_id_is_cached_from_profile(services: Services, environ: dict[str, str]) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    profile = Profile(user_id=CACHED_USER_ID)
+    settings = Settings(profiles={"default": profile})
+    options = resolve_options(GlobalOptions(), settings, is_tty=False)
+    console = Console()
+    context = AppContext(
+        options=options,
+        services=services,
+        console=console,
+        renderer=JsonRenderer(RenderTarget(console=console, stream=console.file)),
+    )
+    # Act
+    resolved = context.user_id()
+    # Assert
+    assert resolved == CACHED_USER_ID
+    assert context.options.profile == profile
+    context.close()
+
+
+@respx.mock
+def test_user_id_falls_back_to_user_me(services: Services, environ: dict[str, str]) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    app_context = _context(services)
+    # Act
+    resolved = app_context.user_id()
+    # Assert
+    assert resolved == CACHED_USER_ID
+    assert app_context.user_id() == resolved
+    app_context.close()
