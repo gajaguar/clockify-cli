@@ -15,7 +15,9 @@ name the PyPI publisher must be configured with.
 
 To release:
 
-1. Set `project.version` in `pyproject.toml` and merge that change to `main`.
+1. Set `project.version` in `pyproject.toml` and `version` in
+   `.claude-plugin/plugin.json`, and merge that change to `main`. A test fails
+   when the two differ.
 2. Create a GitHub release whose tag is `v<version>`, for example `v0.2.0`.
 3. Publishing the release runs the workflow. It fails before building when the
    tag and `project.version` differ.
