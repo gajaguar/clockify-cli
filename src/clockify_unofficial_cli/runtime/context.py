@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from dataclasses import field
 from typing import TYPE_CHECKING
 
+from clockify import UserId
 from rich.console import Console
 
+from clockify_unofficial_cli.runtime.client_factory import ClientRequest
 from clockify_unofficial_cli.runtime.errors import CliError
 from clockify_unofficial_cli.runtime.exit_codes import ExitCode
 
@@ -39,6 +41,7 @@ class AppContext:
     console: Console
     renderer: Renderer
     _client: ClockifyClient | None = field(default=None, init=False, repr=False)
+    _user_id: UserId | None = field(default=None, init=False, repr=False)
 
     def credential(self) -> ResolvedCredential:
         resolved = self.services.credentials.resolve(self.options.profile_name)
@@ -51,8 +54,22 @@ class AppContext:
     def client(self) -> ClockifyClient:
         if self._client is None:
             credential = self.credential().credential
-            self._client = self.services.clients(credential, self.options.profile.region)
+            request = ClientRequest(
+                credential=credential,
+                region=self.options.profile.region,
+                verbose=self.options.verbose,
+            )
+            self._client = self.services.clients(request)
         return self._client
+
+    def user_id(self) -> UserId:
+        if self._user_id is None:
+            cached = self.options.profile.user_id
+            if cached is not None:
+                self._user_id = UserId(cached)
+            else:
+                self._user_id = self.client().user.me().id
+        return self._user_id
 
     def workspace(self) -> WorkspaceClient:
         if self.options.workspace_id:
@@ -71,6 +88,7 @@ class AppContext:
         if self._client is not None:
             self._client.close()
             self._client = None
+        self._user_id = None
 
 
 def get_app_context(ctx: typer.Context) -> AppContext:

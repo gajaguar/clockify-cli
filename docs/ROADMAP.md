@@ -75,7 +75,7 @@ A phase is **done** when:
 
 ## Phase 1 — MVP on the current SDK (39 operations)
 
-No SDK changes: this phase uses what `clockify-sdk v0.1.0` already ships.
+**Status: done.**
 
 - **Commands:**
   - `workspace list|get|use` (`use` writes the profile's `workspace_id`);
