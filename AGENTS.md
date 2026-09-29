@@ -14,8 +14,10 @@ stable exit codes. Full spec: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 Delivery phases: [`docs/ROADMAP.md`](docs/ROADMAP.md). Per-endpoint status:
 [`docs/coverage.md`](docs/coverage.md).
 
-This repo is instantiated from a multi-language template (see "Branch
-model" below); this checkout is on the Python-only `main` branch.
+## Agent instructions
+
+`AGENTS.md` is the only agent instructions file. The repository MUST NOT
+contain a `CLAUDE.md` or any other tool-specific copy; project rules go here.
 
 ## Commands
 
@@ -25,11 +27,13 @@ a target without its `##` help line (`make help` lists them all).
 
 ```bash
 make install          # mise toolchain, uv sync, pnpm tools, pre-commit hook
-make check            # read-only CI gate (lint, format, types, spell, pylint)
+make check            # read-only CI gate (lint, format, types, spell, pylint, commits)
 make fix              # safe auto-fixes (ruff format, ruff --fix, markdownlint --fix)
 make fix-unsafe       # fix, including unsafe ruff fixes
 make test             # pytest, 90% coverage floor, excludes -m live
 make coverage         # pytest with an HTML coverage report
+make build            # sdist and wheel into dist/
+make commits-check    # commit range and branch name vs Conventional Commits/Branch
 make openapi-fetch    # download Clockify's OpenAPI doc into .cache/
 make coverage-report  # diff docs/coverage.md against the cached OpenAPI doc
 ```
@@ -42,8 +46,8 @@ make coverage-report  # diff docs/coverage.md against the cached OpenAPI doc
   `check`.
 - Live tests (`-m live`) hit the real Clockify API and need
   `CLOCKIFY_TEST_API_KEY`; `make test` excludes them by default.
-- `make check` MUST pass before any commit; fix findings with `make fix`
-  before editing by hand.
+- `make check` MUST pass before any commit; findings SHOULD be fixed with
+  `make fix` before editing by hand.
 
 ## Architecture
 
@@ -86,52 +90,50 @@ header API keys) — see
 [`docs/ARCHITECTURE.md#authentication`](docs/ARCHITECTURE.md#authentication)
 before touching `auth/`.
 
-## Branch model
-
-Anything language-agnostic MUST be changed on `main` and brought down into a
-language branch with `git merge main`. A language branch MUST NOT edit a
-file it shares with `main` except by _appending to the end_ — see
-[`docs/adding-a-language.md`](docs/adding-a-language.md). This append-only
-discipline is what keeps `git merge main` conflict-free.
-
 ## Commits and branches
 
 Commit messages MUST follow
 [Conventional Commits](https://www.conventionalcommits.org/); branch names
-MUST follow [Conventional Branch](https://conventional-branch.github.io/)
-(`<type>/<description>`, e.g. `feat/add-python-branch`,
-`fix/makefile-phony-scoping`). Both share the same `type` vocabulary
-(`feat`, `fix`, `docs`, `build`, `ci`, `refactor`, `test`, `chore`, ...).
+MUST follow [Conventional Branch](https://conventionalbranch.org/)
+(`<type>/<description>`, e.g. `feat/add-login`). Documentation and
+dependency work uses `chore/`, not `docs/`: a branch type is not a commit
+type. A pre-commit hook and `make commits-check` enforce both — see
+[`docs/conventions/commits-check.md`](docs/conventions/commits-check.md).
 
-## Repository metadata
+## Documentation
 
-The agent MUST populate the GitHub repository metadata before the first
-release, and SHOULD do so in the first commit that follows instantiation of
-this template:
+Documentation MUST be an OKF bundle of atomic notes under `docs/`: one
+Markdown concept per file, with YAML frontmatter (`type`, `title`,
+`description`). A new note MUST be added to its directory's `index.md` and
+to [`docs/log.md`](docs/log.md). A note MUST cover exactly one concept, and
+only when it explains something a reader can't already get from `make
+help`, a linter's own message, or the configuration it comes from.
 
-- The repository description MUST be set to a single sentence, in English,
-  without a trailing period.
-- Repository topics MUST include the primary language and the project kind,
-  and SHOULD include the main framework or runtime.
-- The homepage URL MUST be set when the project is deployed or published,
-  and MAY be left empty otherwise.
-- `README.md` MUST NOT be the only place where the purpose of the project is
-  stated; the description and the README first paragraph MUST agree.
+## Dependencies
 
-Apply these with `gh`, e.g. `gh repo edit --description "..." --add-topic
-<topic> --homepage "..."`. The agent MUST NOT leave the description empty,
-and MUST NOT copy the description of this template verbatim.
+A new tool MUST be added to the ecosystem manager that owns it and MUST
+only go in `mise.toml` when it bootstraps an ecosystem or has none in this
+repository — see
+[`docs/toolchain/layering-rule.md`](docs/toolchain/layering-rule.md).
 
-## Python rules (this branch)
+## Python
 
-These extend the sections above and apply only on the Python branch.
-
-- MUST NOT add docstrings to functions, methods, or classes; use a comment
-  only where the _why_ is not obvious from the code. The `pylint-plugin`
-  `app-no-docstrings` checker enforces this and fails `make
-check`/`make pylint` otherwise.
-- MUST run `make check` and `make test` before committing Python changes,
-  and SHOULD run `make fix` first for anything auto-fixable.
+- The agent MUST NOT add docstrings to functions, methods, or classes; use a
+  comment only where the _why_ is not obvious from the code. The
+  `pylint-gajaguar` `gajaguar-no-docstrings` checker enforces this and fails
+  `make check`/`make pylint` otherwise.
+- pylint MUST enable the plugin with `enable = ["gajaguar"]` in
+  `pyproject.toml`'s `[tool.pylint."messages control"]`, not with a list of
+  rules, so a rule added by a `pylint-gajaguar` upgrade is never left off.
+- `conventional-git` MUST be the latest PyPI release; `make
+  conventional-git-latest` (part of `make check`) fails otherwise, and `make
+  install` upgrades it.
+- The agent MUST NOT add a `pyproject.toml` setting that equals the tool's
+  default, and every `lint.per-file-ignores` entry MUST match a current
+  violation — see
+  [`docs/python/pyproject-defaults.md`](docs/python/pyproject-defaults.md).
+- The agent MUST run `make check` and `make test` before committing Python
+  changes, and SHOULD run `make fix` first for anything auto-fixable.
 
 ## clockify-cli project rules
 

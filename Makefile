@@ -7,11 +7,18 @@ NPM := pnpm
 # Usage: make lint FILES="src/foo.py src/bar.py"
 FILES ?=
 
+# The commit range commits-check re-validates in CI (a local hook can be
+# skipped with --no-verify). Override CONVENTIONAL_GIT to run a
+# project-pinned copy instead of an ephemeral uvx fetch — see
+# docs/conventions/commits-check.md.
+BASE ?= origin/main
+CONVENTIONAL_GIT ?= uvx conventional-git@latest
+BRANCH ?= $(or $(GITHUB_HEAD_REF),$(shell git branch --show-current))
+
 .DEFAULT_GOAL := help
 
-# Extension points. Each language branch appends to these variables from its
-# own mk/*.mk; main ships no mk/*.mk (only mk/.gitkeep), so main and the
-# language branches never edit the same file.
+# Extension points. Each mk/*.mk file appends its own targets to these
+# variables; -include mk/*.mk below picks up every one.
 LANG_INSTALL_TARGETS     :=
 LANG_CHECK_TARGETS       :=
 LANG_FIX_TARGETS         :=
@@ -59,9 +66,16 @@ spell: ## Spell-check files with cspell — accepts FILES="..."
 		pnpm exec cspell --no-progress --no-summary $(if $(FILES),$(FILES),'**'); \
 	fi
 
-check: makefile-lint md-lint spell $(LANG_CHECK_TARGETS) ## Run the full read-only validation gate
+commits-check: ## Validate the commit range and branch name against Conventional Commits/Branch — see docs/conventions/commits-check.md
+	@git log --no-merges --format='%B%x00' $(BASE)..HEAD | while IFS= read -r -d '' message; do \
+		message="$${message#$$'\n'}"; [ -z "$$message" ] && continue; \
+		echo "$$message" | $(CONVENTIONAL_GIT) check commit || exit 1; \
+	done
+	@$(CONVENTIONAL_GIT) check branch --name "$(BRANCH)"
 
-.PHONY: makefile-lint md-lint spell check
+check: makefile-lint md-lint spell commits-check $(LANG_CHECK_TARGETS) ## Run the full read-only validation gate
+
+.PHONY: makefile-lint md-lint spell commits-check check
 
 ##@ Writable fixes (mutate files in place)
 

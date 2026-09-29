@@ -19,3 +19,10 @@ MD013:
   heading_line_length: 80
   code_block_line_length: 80
   tables: false
+
+# A YAML frontmatter `title` and the body's H1 are allowed to coexist and to
+# repeat the same text — OKF concept notes (docs/) carry both.
+MD025:
+  front_matter_title: ""
+MD041:
+  front_matter_title: ""

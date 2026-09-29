@@ -1,14 +1,17 @@
 name: python
 on:
   push:
-    branches: [python]
+    branches: [main]
   pull_request:
-    branches: [python]
+    branches: [main]
 jobs:
   quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.ref }}
       - uses: jdx/mise-action@v4
       - run: pnpm install --frozen-lockfile
       - run: uv sync --locked
