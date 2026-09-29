@@ -112,7 +112,7 @@ dev = [
 
 [tool.uv.sources]
 pylint-plugin = { git = "https://github.com/gajaguar/pylint-plugin", tag = "v1.1.1" }
-clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v0.1.0" }
+clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v1.0.0" }
 
 [tool.uv]
 python-preference = "only-system"
