@@ -31,7 +31,6 @@ Unofficial command-line interface for Clockify, built on
 - [Contributing](#contributing)
 - [Security](#security)
 - [License](#license)
-- [Contact](#contact)
 
 ## About
 
