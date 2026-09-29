@@ -15,6 +15,7 @@ from clockify_unofficial_cli.output.renderer import many
 from clockify_unofficial_cli.output.renderer import single
 from clockify_unofficial_cli.runtime.context import get_app_context
 from clockify_unofficial_cli.runtime.errors import handle_errors
+from clockify_unofficial_cli.runtime.params import options_from
 from clockify_unofficial_cli.runtime.prompts import confirm
 from clockify_unofficial_cli.services.listing import list_from_options
 from clockify_unofficial_cli.services.resolve import resolve_project
@@ -99,32 +100,31 @@ class _CreateArgs:
     status: TaskStatus | None
 
 
-@APP.command(help="Create a new task under the named project.")
-@handle_errors
-def create(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    *,
-    project: Annotated[str, typer.Option("--project", "-P", help="Project ID or exact name.")],
-    name: Annotated[str, typer.Option("--name", help="Task display name.")],
-    assignee: Annotated[
-        str | None,
-        typer.Option("--assignee", help="Assignee user ID."),
-    ] = None,
+@dataclass(frozen=True, slots=True)
+class _CreateOptions:
+    project: Annotated[str, typer.Option("--project", "-P", help="Project ID or exact name.")]
+    name: Annotated[str, typer.Option("--name", help="Task display name.")]
+    assignee: Annotated[str | None, typer.Option("--assignee", help="Assignee user ID.")] = None
     estimate: Annotated[
         str | None,
         typer.Option("--estimate", help="ISO-8601 duration estimate, e.g. PT2H30M."),
-    ] = None,
+    ] = None
     status: Annotated[
         TaskStatus | None,
         typer.Option("--status", case_sensitive=False, help="ACTIVE or DONE."),
-    ] = None,
-) -> None:
+    ] = None
+
+
+@APP.command(help="Create a new task under the named project.")
+@handle_errors
+@options_from(_CreateOptions)
+def create(ctx: typer.Context, options: _CreateOptions) -> None:
     args = _CreateArgs(
-        project=project,
-        name=name,
-        assignee_ids=[UserId(assignee)] if assignee else None,
-        estimate=estimate,
-        status=status,
+        project=options.project,
+        name=options.name,
+        assignee_ids=[UserId(options.assignee)] if options.assignee else None,
+        estimate=options.estimate,
+        status=options.status,
     )
     app_context = get_app_context(ctx)
     project_id = _project_id(app_context, args.project)
@@ -142,40 +142,33 @@ class _UpdateArgs:
     status: TaskStatus | None
 
 
-@APP.command(help="Update an existing task.")
-@handle_errors
-def update(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    term: Annotated[str, typer.Argument(help="Task ID or exact name.")],
-    *,
-    project: Annotated[str, typer.Option("--project", "-P", help="Project ID or exact name.")],
-    name: Annotated[
-        str | None,
-        typer.Option("--name", help="New task display name."),
-    ] = None,
-    assignee: Annotated[
-        str | None,
-        typer.Option("--assignee", help="New assignee user ID."),
-    ] = None,
-    estimate: Annotated[
-        str | None,
-        typer.Option("--estimate", help="New ISO-8601 duration estimate."),
-    ] = None,
+@dataclass(frozen=True, slots=True)
+class _UpdateOptions:
+    term: Annotated[str, typer.Argument(help="Task ID or exact name.")]
+    project: Annotated[str, typer.Option("--project", "-P", help="Project ID or exact name.")]
+    name: Annotated[str | None, typer.Option("--name", help="New task display name.")] = None
+    assignee: Annotated[str | None, typer.Option("--assignee", help="New assignee user ID.")] = None
+    estimate: Annotated[str | None, typer.Option("--estimate", help="New ISO-8601 duration estimate.")] = None
     status: Annotated[
         TaskStatus | None,
         typer.Option("--status", case_sensitive=False, help="ACTIVE or DONE."),
-    ] = None,
-) -> None:
+    ] = None
+
+
+@APP.command(help="Update an existing task.")
+@handle_errors
+@options_from(_UpdateOptions)
+def update(ctx: typer.Context, options: _UpdateOptions) -> None:
     args = _UpdateArgs(
-        project=project,
-        name=name,
-        assignee_ids=[UserId(assignee)] if assignee else None,
-        estimate=estimate,
-        status=status,
+        project=options.project,
+        name=options.name,
+        assignee_ids=[UserId(options.assignee)] if options.assignee else None,
+        estimate=options.estimate,
+        status=options.status,
     )
     app_context = get_app_context(ctx)
     project_id = _project_id(app_context, args.project)
-    task_id = resolve_task(app_context, project_id, term)
+    task_id = resolve_task(app_context, project_id, options.term)
     payload = TaskUpdate(**{k: v for k, v in dataclasses.asdict(args).items() if v is not None and k != "project"})
     task = app_context.workspace().tasks.update(project_id, task_id, payload)
     app_context.render(single(task, TASKS))

@@ -1,7 +1,4 @@
-import dataclasses
 from dataclasses import dataclass
-from datetime import datetime
-from datetime import timedelta
 from typing import Annotated
 from typing import Final
 
@@ -17,6 +14,7 @@ from clockify_unofficial_cli.runtime.context import get_app_context
 from clockify_unofficial_cli.runtime.errors import CliError
 from clockify_unofficial_cli.runtime.errors import handle_errors
 from clockify_unofficial_cli.runtime.exit_codes import ExitCode
+from clockify_unofficial_cli.runtime.params import options_from
 from clockify_unofficial_cli.services.resolve import resolve_project
 from clockify_unofficial_cli.services.resolve import resolve_tag
 from clockify_unofficial_cli.services.resolve import resolve_task
@@ -33,63 +31,32 @@ APP: Final = typer.Typer(help="Timer shortcuts (start/stop/status/log).", no_arg
 
 
 @dataclass(frozen=True, slots=True)
-class _StartArgs:  # pylint: disable=too-many-instance-attributes
-    description: str | None
-    project_id: ProjectId | None
-    task_id: TaskId | None
-    tag_ids: tuple[TagId, ...]
-    billable: bool
-    start: datetime | None
-
-
-@dataclass(frozen=True, slots=True)
-class _LogArgs:  # pylint: disable=too-many-instance-attributes
-    description: str | None
-    project_id: ProjectId | None
-    task_id: TaskId | None
-    tag_ids: tuple[TagId, ...]
-    billable: bool
-    start: datetime | None
-    end: datetime | None
-    duration: timedelta | None
+class _StartOptions:
+    description: Annotated[str | None, typer.Argument(help="Entry description.")] = None
+    project: Annotated[str | None, typer.Option("--project", "-P", help="Project ID or exact name.")] = None
+    task: Annotated[str | None, typer.Option("--task", "-t", help="Task ID or exact name; requires --project.")] = None
+    tag: Annotated[list[str] | None, typer.Option("--tag", help="Tag ID or exact name; pass multiple times.")] = None
+    billable: Annotated[bool, typer.Option("--billable/--no-billable", help="Mark the entry as billable.")] = False
+    from_: Annotated[str | None, typer.Option("--from", help="Start instant; defaults to now.")] = None
 
 
 @APP.command(name="start", help="Start a new running timer; defaults to `now` when --from is omitted.")
 @handle_errors
-def start_cmd(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    description: Annotated[str | None, typer.Argument(help="Entry description.")] = None,
-    *,
-    project: Annotated[str | None, typer.Option("--project", "-P", help="Project ID or exact name.")] = None,
-    task: Annotated[
-        str | None, typer.Option("--task", "-t", help="Task ID or exact name; requires --project.")
-    ] = None,
-    tag: Annotated[list[str] | None, typer.Option("--tag", help="Tag ID or exact name; pass multiple times.")] = None,
-    billable: Annotated[bool, typer.Option("--billable/--no-billable", help="Mark the entry as billable.")] = False,
-    from_: Annotated[str | None, typer.Option("--from", help="Start instant; defaults to now.")] = None,
-) -> None:
-    if task and not project:
+@options_from(_StartOptions)
+def start_cmd(ctx: typer.Context, options: _StartOptions) -> None:
+    if options.task and not options.project:
         message = "--task requires --project because tasks are scoped to projects."
         raise CliError(message, exit_code=ExitCode.USAGE)
     app_context = get_app_context(ctx)
-    project_id = ProjectId(resolve_project(app_context, project)) if project else None
-    task_id = TaskId(resolve_task(app_context, project_id, task)) if task and project_id else None
-    tag_ids = tuple(TagId(resolve_tag(app_context, term)) for term in (tag or ()))
-    args = _StartArgs(
-        description=description,
+    project_id = ProjectId(resolve_project(app_context, options.project)) if options.project else None
+    task_id = TaskId(resolve_task(app_context, project_id, options.task)) if options.task and project_id else None
+    request = TimerRequest(
+        description=options.description,
         project_id=project_id,
         task_id=task_id,
-        tag_ids=tag_ids,
-        billable=billable,
-        start=parse_optional_instant(from_),
-    )
-    request = TimerRequest(
-        description=args.description,
-        project_id=args.project_id,
-        task_id=args.task_id,
-        tag_ids=args.tag_ids,
-        billable=args.billable,
-        start=args.start,
+        tag_ids=tuple(TagId(resolve_tag(app_context, term)) for term in (options.tag or ())),
+        billable=options.billable,
+        start=parse_optional_instant(options.from_),
         end=None,
         duration=None,
     )
@@ -118,65 +85,46 @@ def status_cmd(ctx: typer.Context) -> None:
     app_context.render(single(_entry_as_record(entry), TIME_ENTRIES))
 
 
+@dataclass(frozen=True, slots=True)
+class _LogOptions:
+    description: Annotated[str | None, typer.Option("--description", help="Entry description.")] = None
+    project: Annotated[str | None, typer.Option("--project", "-P", help="Project ID or exact name.")] = None
+    task: Annotated[str | None, typer.Option("--task", "-t", help="Task ID or exact name; requires --project.")] = None
+    tag: Annotated[list[str] | None, typer.Option("--tag", help="Tag ID or exact name; pass multiple times.")] = None
+    billable: Annotated[bool, typer.Option("--billable/--no-billable", help="Mark the entry as billable.")] = False
+    from_: Annotated[str | None, typer.Option("--from", help="Start instant.")] = None
+    to: Annotated[str | None, typer.Option("--to", help="End instant.")] = None
+    duration: Annotated[str | None, typer.Option("--duration", help="Duration, e.g. 1h30m.")] = None
+
+
 @APP.command(name="log", help="Log a finished entry; --duration with one of --from/--to, or both --from and --to.")
 @handle_errors
-def log_cmd(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments,too-many-locals
-    ctx: typer.Context,
-    *,
-    description: Annotated[str | None, typer.Option("--description", help="Entry description.")] = None,
-    project: Annotated[str | None, typer.Option("--project", "-P", help="Project ID or exact name.")] = None,
-    task: Annotated[
-        str | None, typer.Option("--task", "-t", help="Task ID or exact name; requires --project.")
-    ] = None,
-    tag: Annotated[list[str] | None, typer.Option("--tag", help="Tag ID or exact name; pass multiple times.")] = None,
-    billable: Annotated[bool, typer.Option("--billable/--no-billable", help="Mark the entry as billable.")] = False,
-    from_: Annotated[str | None, typer.Option("--from", help="Start instant.")] = None,
-    to: Annotated[str | None, typer.Option("--to", help="End instant.")] = None,
-    duration: Annotated[str | None, typer.Option("--duration", help="Duration, e.g. 1h30m.")] = None,
-) -> None:
-    if task and not project:
+@options_from(_LogOptions)
+def log_cmd(ctx: typer.Context, options: _LogOptions) -> None:
+    if options.task and not options.project:
         message = "--task requires --project because tasks are scoped to projects."
         raise CliError(message, exit_code=ExitCode.USAGE)
-    if from_ is None and to is None and duration is None:
+    if options.from_ is None and options.to is None and options.duration is None:
         message = "`log` needs --from/--to or --duration."
         raise CliError(message, exit_code=ExitCode.USAGE)
     app_context = get_app_context(ctx)
-    project_id = ProjectId(resolve_project(app_context, project)) if project else None
-    task_id = TaskId(resolve_task(app_context, project_id, task)) if task and project_id else None
-    tag_ids = tuple(TagId(resolve_tag(app_context, term)) for term in (tag or ()))
-    args = _LogArgs(
-        description=description,
+    project_id = ProjectId(resolve_project(app_context, options.project)) if options.project else None
+    task_id = TaskId(resolve_task(app_context, project_id, options.task)) if options.task and project_id else None
+    request = LogRequest(
+        description=options.description,
         project_id=project_id,
         task_id=task_id,
-        tag_ids=tag_ids,
-        billable=billable,
-        start=parse_optional_instant(from_),
-        end=parse_optional_instant(to),
-        duration=parse_optional_duration(duration),
-    )
-    request = LogRequest(
-        description=args.description,
-        project_id=args.project_id,
-        task_id=args.task_id,
-        tag_ids=args.tag_ids,
-        billable=args.billable,
-        start=args.start,
-        end=args.end,
-        duration=args.duration,
+        tag_ids=tuple(TagId(resolve_tag(app_context, term)) for term in (options.tag or ())),
+        billable=options.billable,
+        start=parse_optional_instant(options.from_),
+        end=parse_optional_instant(options.to),
+        duration=parse_optional_duration(options.duration),
     )
     entry = log_entry(app_context, request=request)
     app_context.render(single(_entry_as_record(entry), TIME_ENTRIES))
-
-
-# Listed here so main.create_app can register each one as a root-level Typer command,
-# matching the documented "start/stop/status/log" root shortcuts.
-ROOT_COMMANDS: Final = (start_cmd, stop_cmd, status_cmd, log_cmd)
 
 
 # Wrap the SDK time-entry object into a dict mapping so the renderer's to_record
 # coercion accepts it without mypy complaining about `object` not being a BaseModel.
 def _entry_as_record(entry: object) -> dict[str, object]:
     return dict(to_record(entry))
-
-
-del dataclasses

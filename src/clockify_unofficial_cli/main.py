@@ -1,5 +1,6 @@
 import os
 import sys
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
 from typing import Annotated
 from typing import Final
@@ -36,6 +37,7 @@ from clockify_unofficial_cli.runtime.client_factory import create_sdk_client
 from clockify_unofficial_cli.runtime.context import AppContext
 from clockify_unofficial_cli.runtime.context import Services
 from clockify_unofficial_cli.runtime.errors import handle_errors
+from clockify_unofficial_cli.runtime.params import options_from
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -61,6 +63,30 @@ def print_version(
         raise typer.Exit
 
 
+@dataclass(frozen=True, slots=True)
+class _RootOptions:
+    profile: Annotated[
+        str | None,
+        typer.Option("--profile", "-p", envvar="CLOCKIFY_PROFILE", help="Configuration profile to use."),
+    ] = None
+    workspace: Annotated[
+        str | None,
+        typer.Option("--workspace", "-w", envvar="CLOCKIFY_WORKSPACE", help="Workspace ID; overrides the profile."),
+    ] = None
+    output: Annotated[
+        OutputFormat | None,
+        typer.Option("--output", "-o", envvar="CLOCKIFY_OUTPUT", case_sensitive=False, help="Output format."),
+    ] = None
+    verbose: Annotated[
+        bool,
+        typer.Option("--verbose", "-v", help="Print HTTP request diagnostics to stderr."),
+    ] = False
+    version: Annotated[
+        bool,
+        typer.Option("--version", callback=print_version, is_eager=True, help="Show the version and exit."),
+    ] = False
+
+
 # Global options must precede the sub-command (`clockify -o json auth status`). Colors follow
 # Rich's NO_COLOR handling, so there is no --no-color flag to keep the callback small.
 def create_app(services_factory: Callable[[], Services] = default_services) -> typer.Typer:
@@ -68,34 +94,11 @@ def create_app(services_factory: Callable[[], Services] = default_services) -> t
 
     @cli.callback()
     @handle_errors
-    def root(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-        ctx: typer.Context,
-        *,
-        profile: Annotated[
-            str | None,
-            typer.Option("--profile", "-p", envvar="CLOCKIFY_PROFILE", help="Configuration profile to use."),
-        ] = None,
-        workspace: Annotated[  # pylint: disable=redefined-outer-name
-            str | None,
-            typer.Option(
-                "--workspace", "-w", envvar="CLOCKIFY_WORKSPACE", help="Workspace ID; overrides the profile."
-            ),
-        ] = None,
-        output: Annotated[
-            OutputFormat | None,
-            typer.Option("--output", "-o", envvar="CLOCKIFY_OUTPUT", case_sensitive=False, help="Output format."),
-        ] = None,
-        verbose: Annotated[
-            bool,
-            typer.Option("--verbose", "-v", help="Print HTTP request diagnostics to stderr."),
-        ] = False,
-        version: Annotated[
-            bool,
-            typer.Option("--version", callback=print_version, is_eager=True, help="Show the version and exit."),
-        ] = False,
-    ) -> None:
-        del version
-        flags = GlobalOptions(profile=profile, workspace=workspace, output=output, verbose=verbose)
+    @options_from(_RootOptions)
+    def root(ctx: typer.Context, options: _RootOptions) -> None:
+        flags = GlobalOptions(
+            profile=options.profile, workspace=options.workspace, output=options.output, verbose=options.verbose
+        )
         _bind_context(ctx=ctx, services=services_factory(), flags=flags)
 
     def _bind_context(*, ctx: typer.Context, services: Services, flags: GlobalOptions) -> None:
@@ -117,8 +120,7 @@ def create_app(services_factory: Callable[[], Services] = default_services) -> t
     cli.add_typer(custom_field.APP, name="custom-field")
     cli.add_typer(group.APP, name="group")
     cli.add_typer(entry.APP, name="entry")
-    for shortcut in timer_shortcuts.ROOT_COMMANDS:
-        cli.command(name=shortcut.__name__.removesuffix("_cmd"), help=shortcut.__doc__ or "")(shortcut)
+    cli.registered_commands.extend(timer_shortcuts.APP.registered_commands)
     return cli
 
 

@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 # Per-invocation bundle so the timer service can build a Clockify payload without
 # growing a long positional argument list every time a new flag appears.
 @dataclass(frozen=True, slots=True)
-class TimerRequest:  # pylint: disable=too-many-instance-attributes,duplicate-code
+class TimerRequest:
     description: str | None
     project_id: ProjectId | None
     task_id: TaskId | None
@@ -55,7 +55,6 @@ def stop_timer(app_context: AppContext, *, end: datetime.datetime | None) -> obj
 
 
 def running_entry(app_context: AppContext) -> object | None:
-
     entries = list(
         app_context.workspace().time_entries.list(
             app_context.user_id(),
@@ -66,7 +65,7 @@ def running_entry(app_context: AppContext) -> object | None:
 
 
 @dataclass(frozen=True, slots=True)
-class LogRequest:  # pylint: disable=too-many-instance-attributes,duplicate-code
+class LogRequest:
     description: str | None
     project_id: ProjectId | None
     task_id: TaskId | None
