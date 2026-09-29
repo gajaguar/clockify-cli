@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from typing import Annotated
 from typing import Final
@@ -9,6 +10,7 @@ from clockify_unofficial_cli.runtime.errors import handle_errors
 from clockify_unofficial_cli.runtime.params import options_from
 
 RUNNER: Final = CliRunner()
+ANSI: Final = re.compile(r"\x1b\[[0-9;]*m")
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,8 +67,9 @@ def test_options_from_exposes_every_field_in_help() -> None:
     result = RUNNER.invoke(app, ["create", "--help"])
     # Assert
     assert result.exit_code == 0
+    plain = ANSI.sub("", result.output)
     for flag in ("--project", "-P", "--billable", "--no-billable", "--tag", "Project filter."):
-        assert flag in result.output
+        assert flag in plain
 
 
 def test_options_from_requires_arguments_without_defaults() -> None:
