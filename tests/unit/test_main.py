@@ -52,3 +52,12 @@ def test_piped_output_defaults_to_json(runner: CliRunner, cli: typer.Typer) -> N
     # Assert
     assert result.exit_code == ExitCode.OK
     assert result.stdout == "[]\n"
+
+
+def test_verbose_flag_is_accepted(runner: CliRunner, cli: typer.Typer) -> None:
+    # Arrange
+    args = ["-v", "config", "list"]
+    # Act
+    result = runner.invoke(cli, args)
+    # Assert
+    assert result.exit_code == ExitCode.OK

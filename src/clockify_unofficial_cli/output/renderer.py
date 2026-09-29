@@ -51,10 +51,13 @@ class Renderer(Protocol):
 
 
 # JSON output keeps Clockify's camelCase field names so it lines up with the API docs.
-def to_record(item: BaseModel | Record) -> Record:
+def to_record(item: BaseModel | Record | object) -> Record:
     if isinstance(item, BaseModel):
         return item.model_dump(mode="json", by_alias=True)
-    return item
+    if isinstance(item, Mapping):
+        return item
+    message = f"Cannot coerce {type(item).__name__} to a renderer record."
+    raise TypeError(message)
 
 
 def many(items: Iterable[BaseModel | Record], columns: Sequence[Column]) -> Dataset:

@@ -23,7 +23,7 @@ def test_settings_values_apply_when_no_flags_are_given() -> None:
     resolved = resolve_options(options, SETTINGS, is_tty=True)
     # Assert
     assert resolved == ResolvedOptions(
-        profile_name="work", profile=WORK, workspace_id="ws-work", output=OutputFormat.CSV
+        profile_name="work", profile=WORK, workspace_id="ws-work", output=OutputFormat.CSV, verbose=False
     )
 
 
@@ -34,7 +34,7 @@ def test_flags_override_settings() -> None:
     resolved = resolve_options(options, SETTINGS, is_tty=True)
     # Assert
     assert resolved == ResolvedOptions(
-        profile_name="home", profile=Profile(), workspace_id="ws-flag", output=OutputFormat.ID
+        profile_name="home", profile=Profile(), workspace_id="ws-flag", output=OutputFormat.ID, verbose=False
     )
 
 

@@ -49,6 +49,7 @@ class GlobalOptions:
     profile: str | None = None
     workspace: str | None = None
     output: OutputFormat | None = None
+    verbose: bool = False
 
 
 @dataclass(frozen=True, slots=True)
@@ -57,6 +58,7 @@ class ResolvedOptions:
     profile: Profile
     workspace_id: str | None
     output: OutputFormat
+    verbose: bool
 
 
 def resolve_options(options: GlobalOptions, settings: Settings, *, is_tty: bool) -> ResolvedOptions:
@@ -69,4 +71,5 @@ def resolve_options(options: GlobalOptions, settings: Settings, *, is_tty: bool)
         profile=profile,
         workspace_id=options.workspace or profile.workspace_id,
         output=options.output or settings.output or fallback_output,
+        verbose=options.verbose,
     )

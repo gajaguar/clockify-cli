@@ -25,9 +25,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     import typer
-    from clockify import Region
 
-    from clockify_unofficial_cli.auth.credentials import Credential
+    from clockify_unofficial_cli.runtime.client_factory import ClientRequest
+
 
 BASE_URL: Final = "https://fake.clockify.test/api/v1"
 
@@ -60,9 +60,8 @@ class MemoryKeyring(KeyringBackend):
         del self.passwords[service, username]
 
 
-def fake_client(credential: Credential, region: Region) -> ClockifyClient:
-    del region
-    return ClockifyClient(api_key=credential.api_key, options=ClientOptions(base_url=BASE_URL, retry=NO_RETRY))
+def fake_client(request: ClientRequest) -> ClockifyClient:
+    return ClockifyClient(api_key=request.credential.api_key, options=ClientOptions(base_url=BASE_URL, retry=NO_RETRY))
 
 
 @pytest.fixture(name="memory_keyring")
