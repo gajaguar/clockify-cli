@@ -1,3 +1,5 @@
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -10,41 +12,68 @@ repos:
       - id: check-added-large-files
       - id: mixed-line-ending
 
-  - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.23.2
+  - repo: local
     hooks:
-      - id: markdownlint-cli2
+      - id: md-lint
+        name: markdownlint-cli2
+        entry: make md-lint
+        language: system
+        files: \.md$
+        pass_filenames: false
 
-  - repo: https://github.com/streetsidesoftware/cspell-cli
-    rev: v10.2.0
-    hooks:
-      - id: cspell
+      - id: spell
+        name: cspell
+        entry: make spell
+        language: system
+        pass_filenames: false
+
+      - id: conventional-commit-msg
+        name: conventional-git commit message
+        entry: uvx conventional-git@latest check commit --file
+        language: system
+        stages: [commit-msg]
+        types: [text]
+        pass_filenames: true
+
+      - id: conventional-branch-name
+        name: conventional-git branch name
+        entry: uvx conventional-git@latest check branch
+        language: system
+        stages: [pre-commit, pre-push]
+        always_run: true
+        pass_filenames: false
 
   - repo: https://github.com/checkmake/checkmake
     rev: v0.3.2
     hooks:
       - id: checkmake-system
 
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.6
-    hooks:
-      - id: ruff
-        args: [--fix, --preview]
-      - id: ruff-format
-        args: [--preview]
-
   - repo: local
     hooks:
+      - id: ruff-fix
+        name: ruff lint --fix
+        entry: make lint-fix
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: ruff-format
+        name: ruff format
+        entry: make format
+        language: system
+        types: [python]
+        pass_filenames: false
+
       - id: mypy
         name: mypy
-        entry: uv run mypy .
+        entry: make mypy
         language: system
         types: [python]
         pass_filenames: false
 
       - id: pylint
-        name: pylint (pylint-plugin)
-        entry: uv run pylint src tests
+        name: pylint (pylint-gajaguar)
+        entry: make pylint
         language: system
         types: [python]
         pass_filenames: false
