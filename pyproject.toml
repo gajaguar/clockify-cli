@@ -60,39 +60,23 @@ exclude_lines = [
 target-version = "py314"
 line-length = 119
 lint.select = ["ALL"]
-lint.ignore = ["COM812", "CPY", "D"]
-lint.isort.section-order = [
-  "future",
-  "standard-library",
-  "third-party",
-  "first-party",
-  "local-folder",
-]
+lint.ignore = ["missing-trailing-comma", "CPY", "D"]
 lint.isort.force-single-line = true
 lint.isort.case-sensitive = true
 # Typer resolves command signatures at runtime, so their annotation imports must stay real imports.
-lint.per-file-ignores."src/clockify_unofficial_cli/commands/**/*.py" = ["TC001", "TC002", "TC003"]
-lint.per-file-ignores."tests/**/*.py" = [ "ANN", "ARG", "FBT001", "PLR2004", "S101", "SLF001"]
+lint.per-file-ignores."src/clockify_unofficial_cli/commands/**/*.py" = ["typing-only-first-party-import", "typing-only-third-party-import", "typing-only-standard-library-import"]
+lint.per-file-ignores."tests/**/*.py" = [ "ANN", "ARG", "boolean-type-hint-positional-argument", "magic-value-comparison", "assert", "private-member-access"]
 
 [tool.mypy]
 strict = true
 exclude = ["tests/"]
 
 [tool.pylint.main]
-load-plugins = ["checkers"]
-
-[tool.pylint.format]
-# Ruff owns formatting and line length (see [tool.ruff] line-length above).
-max-line-length = 119
+load-plugins = ["pylint_gajaguar"]
 
 [tool.pylint."messages control"]
-disable = [
-  "missing-module-docstring",
-  "missing-class-docstring",
-  "missing-function-docstring",
-  # Renderers, stores and other strategy implementations legitimately expose one method.
-  "too-few-public-methods",
-]
+disable = ["all"]
+enable = ["gajaguar"]
 
 [tool.pyright]
 include = ["src"]
@@ -100,20 +84,16 @@ exclude = ["**/.venv", "**/node_modules", "tests"]
 
 [dependency-groups]
 dev = [
-  "mypy>=2.1.0",
-  "pylint-plugin",
-  "pylint>=4.0.5",
-  "pyright>=1.1.409",
-  "pytest>=8.0",
-  "pytest-cov>=6.0",
-  "ruff>=0.15.15",
+  "conventional-git>=1.1",
+  "mypy>=2.3.1",
+  "pylint-gajaguar>=2.0",
+  "pylint>=4.0.9",
+  "pyright>=1.1.414",
+  "pytest-cov>=7.1",
+  "pytest>=9.1",
   "respx>=0.22",
+  "ruff>=0.16.8",
 ]
 
 [tool.uv.sources]
-pylint-plugin = { git = "https://github.com/gajaguar/pylint-plugin", tag = "v1.1.1" }
 clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v1.0.0" }
-
-[tool.uv]
-python-preference = "only-system"
-python-downloads = "never"
