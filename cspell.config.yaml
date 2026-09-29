@@ -17,6 +17,7 @@ ignorePaths:
   - "**/*.lock"
   - "**/pnpm-lock.yaml"
   - ".gitignore" # vendored toptal.com boilerplate, not authored here
+  - "scripts/templates/gitignore/snapshot" # same toptal.com boilerplate, vendored as a fallback
   - "**/.venv/**"
   - "**/.mypy_cache/**"
   - "**/.ruff_cache/**"
