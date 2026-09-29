@@ -10,7 +10,7 @@ from clockify import Region
 if TYPE_CHECKING:
     from clockify_unofficial_cli.auth.credentials import Credential
 
-type ClientFactory = Callable[[Credential, Region], ClockifyClient]  # pylint: disable=app-module-const-naming
+type ClientFactory = Callable[[Credential, Region], ClockifyClient]  # pylint: disable=gajaguar-module-const-naming
 
 
 def create_sdk_client(credential: Credential, region: Region) -> ClockifyClient:
