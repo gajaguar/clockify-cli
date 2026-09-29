@@ -163,7 +163,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clockify-unofficial-sdk", git = "https://github.com/gajaguar/clockify-sdk?tag=v0.1.0" },
+    { name = "clockify-unofficial-sdk", git = "https://github.com/gajaguar/clockify-sdk?tag=v1.0.0" },
     { name = "keyring", specifier = ">=25.0" },
     { name = "platformdirs", specifier = ">=4.0" },
     { name = "pydantic", specifier = ">=2.9" },
@@ -186,8 +186,8 @@ dev = [
 
 [[package]]
 name = "clockify-unofficial-sdk"
-version = "0.1.0"
-source = { git = "https://github.com/gajaguar/clockify-sdk?tag=v0.1.0#28a2efc06523bf88058e59b75525a07dc00dfaef" }
+version = "1.0.0"
+source = { git = "https://github.com/gajaguar/clockify-sdk?tag=v1.0.0#89bb2cb96595f92658130382f2475c6bbaaf7d72" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
