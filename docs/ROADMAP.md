@@ -1,3 +1,11 @@
+---
+type: plan
+title: Roadmap
+description: The phased plan to expose every non-deprecated Clockify API operation through the CLI.
+tags: [roadmap]
+status: stable
+---
+
 # Roadmap
 
 Phased plan to expose **100% of Clockify's non-deprecated API operations**

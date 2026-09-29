@@ -1,3 +1,11 @@
+---
+type: spec
+title: Architecture and technical specification
+description: The stack, layering, design patterns, authentication and extension checklist of clockify-cli.
+tags: [architecture]
+status: stable
+---
+
 # Architecture and technical specification
 
 This document is the technical specification for `clockify-cli`: what it is,
