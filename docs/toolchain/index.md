@@ -8,3 +8,5 @@ and why.
 * [Rejected install backends](rejected-install-backends.md) - the mise
   `npm:`/`pipx:` backends and pre-commit-managed environments this rules
   out.
+* [Releasing to PyPI](releasing.md) - how a GitHub release publishes the
+  package through Trusted Publishing.

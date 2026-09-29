@@ -92,7 +92,16 @@ personal API key and supports regional profiles.
 
 ### Installation
 
-The CLI is not published to PyPI. Install it from a checkout:
+Install the published package with [uv](https://docs.astral.sh/uv/) or
+[pipx](https://pipx.pypa.io/); it needs Python 3.14 or newer:
+
+```bash
+uv tool install clockify-unofficial-cli
+# or
+pipx install clockify-unofficial-cli
+```
+
+To work on the CLI, install it from a checkout instead:
 
 ```bash
 git clone https://github.com/gajaguar/clockify-cli.git
@@ -213,7 +222,7 @@ Live tests are excluded from `make test`. They require
 ## Roadmap
 
 - [x] Phase 0: foundation, authentication, profiles, renderers, and exit codes
-- [ ] Phase 1: workspace, user, project, task, tag, group, and entry commands
+- [x] Phase 1: workspace, user, project, task, tag, group, and entry commands
 - [ ] Phase 2: core API completion
 - [ ] Phase 3: reports
 - [ ] Phase 4: time off, holidays, and approvals
