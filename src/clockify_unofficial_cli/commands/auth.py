@@ -10,6 +10,7 @@ from clockify_unofficial_cli.auth.credentials import ApiKeyCredential
 from clockify_unofficial_cli.config.settings import Profile
 from clockify_unofficial_cli.output.columns import AUTH_STATUS
 from clockify_unofficial_cli.output.renderer import single
+from clockify_unofficial_cli.runtime.client_factory import ClientRequest
 from clockify_unofficial_cli.runtime.context import get_app_context
 from clockify_unofficial_cli.runtime.errors import CliError
 from clockify_unofficial_cli.runtime.errors import handle_errors
@@ -81,7 +82,9 @@ def login(
     credential = ApiKeyCredential(api_key=_read_api_key(with_token=with_token))
     resolved_region = region or app_context.options.profile.region
 
-    with app_context.services.clients(credential, resolved_region) as client:
+    with app_context.services.clients(
+        ClientRequest(credential=credential, region=resolved_region, verbose=app_context.options.verbose)
+    ) as client:
         user = client.user.me()
 
     store = _select_store(stores, insecure_storage=insecure_storage)

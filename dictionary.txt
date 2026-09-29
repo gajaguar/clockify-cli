@@ -25,3 +25,9 @@ uv
 respx
 delenv
 smol
+kebab
+xargs
+tzinfo
+timedelta
+isoformat
+subdomain
