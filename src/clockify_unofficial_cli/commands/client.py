@@ -12,6 +12,7 @@ from clockify_unofficial_cli.output.renderer import many
 from clockify_unofficial_cli.output.renderer import single
 from clockify_unofficial_cli.runtime.context import get_app_context
 from clockify_unofficial_cli.runtime.errors import handle_errors
+from clockify_unofficial_cli.runtime.params import options_from
 from clockify_unofficial_cli.runtime.prompts import confirm
 from clockify_unofficial_cli.services.listing import list_from_options
 from clockify_unofficial_cli.services.resolve import resolve_client
@@ -54,32 +55,16 @@ def get(ctx: typer.Context, term: Annotated[str, typer.Argument(help="Client ID 
 
 @dataclass(frozen=True, slots=True)
 class _CreateArgs:
-    name: str
-    email: str | None
-    address: str | None
-    note: str | None
+    name: Annotated[str, typer.Option("--name", help="Client display name.")]
+    email: Annotated[str | None, typer.Option("--email", help="Contact email.")] = None
+    address: Annotated[str | None, typer.Option("--address", help="Postal address.")] = None
+    note: Annotated[str | None, typer.Option("--note", help="Free-form note.")] = None
 
 
 @APP.command(help="Create a new client.")
 @handle_errors
-def create(  # pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    *,
-    name: Annotated[str, typer.Option("--name", help="Client display name.")],
-    email: Annotated[
-        str | None,
-        typer.Option("--email", help="Contact email."),
-    ] = None,
-    address: Annotated[
-        str | None,
-        typer.Option("--address", help="Postal address."),
-    ] = None,
-    note: Annotated[
-        str | None,
-        typer.Option("--note", help="Free-form note."),
-    ] = None,
-) -> None:
-    args = _CreateArgs(name=name, email=email, address=address, note=note)
+@options_from(_CreateArgs)
+def create(ctx: typer.Context, args: _CreateArgs) -> None:
     app_context = get_app_context(ctx)
     payload = ClientCreate(**{k: v for k, v in dataclasses.asdict(args).items() if v is not None})
     client = app_context.workspace().clients.create(payload)
@@ -88,48 +73,28 @@ def create(  # pylint: disable=too-many-arguments
 
 @dataclass(frozen=True, slots=True)
 class _UpdateArgs:
-    name: str | None
-    email: str | None
-    address: str | None
-    note: str | None
-    archived: bool | None
-
-
-@APP.command(help="Update an existing client.")
-@handle_errors
-def update(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    term: Annotated[str, typer.Argument(help="Client ID or exact name.")],
-    *,
-    name: Annotated[
-        str | None,
-        typer.Option("--name", help="New client display name."),
-    ] = None,
-    email: Annotated[
-        str | None,
-        typer.Option("--email", help="New contact email."),
-    ] = None,
-    address: Annotated[
-        str | None,
-        typer.Option("--address", help="New postal address."),
-    ] = None,
-    note: Annotated[
-        str | None,
-        typer.Option("--note", help="New free-form note."),
-    ] = None,
+    term: Annotated[str, typer.Argument(help="Client ID or exact name.")]
+    name: Annotated[str | None, typer.Option("--name", help="New client display name.")] = None
+    email: Annotated[str | None, typer.Option("--email", help="New contact email.")] = None
+    address: Annotated[str | None, typer.Option("--address", help="New postal address.")] = None
+    note: Annotated[str | None, typer.Option("--note", help="New free-form note.")] = None
     archived: Annotated[
         bool | None,
         typer.Option(
             "--archived/--no-archived",
             help="Archive or restore the client; omit the flag to leave the field untouched.",
         ),
-    ] = None,
-) -> None:
-    args = _UpdateArgs(name=name, email=email, address=address, note=note, archived=archived)
+    ] = None
+
+
+@APP.command(help="Update an existing client.")
+@handle_errors
+@options_from(_UpdateArgs)
+def update(ctx: typer.Context, args: _UpdateArgs) -> None:
     app_context = get_app_context(ctx)
-    client_id = resolve_client(app_context, term)
-    payload = ClientUpdate(**{k: v for k, v in dataclasses.asdict(args).items() if v is not None})
-    client = app_context.workspace().clients.update(client_id, payload)
+    client_id = resolve_client(app_context, args.term)
+    changes = {k: v for k, v in dataclasses.asdict(args).items() if v is not None and k != "term"}
+    client = app_context.workspace().clients.update(client_id, ClientUpdate(**changes))
     app_context.render(single(client, CLIENTS))
 
 

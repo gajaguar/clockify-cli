@@ -13,6 +13,7 @@ from clockify_unofficial_cli.output.renderer import many
 from clockify_unofficial_cli.output.renderer import single
 from clockify_unofficial_cli.runtime.context import get_app_context
 from clockify_unofficial_cli.runtime.errors import handle_errors
+from clockify_unofficial_cli.runtime.params import options_from
 from clockify_unofficial_cli.runtime.prompts import confirm
 from clockify_unofficial_cli.services.listing import list_from_options
 from clockify_unofficial_cli.services.resolve import resolve_client
@@ -64,45 +65,41 @@ class _CreateArgs:
     note: str | None
 
 
-@APP.command(help="Create a new project.")
-@handle_errors
-def create(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    *,
-    name: Annotated[str, typer.Option("--name", help="Project display name.")],
+@dataclass(frozen=True, slots=True)
+class _CreateOptions:
+    name: Annotated[str, typer.Option("--name", help="Project display name.")]
     client: Annotated[
         str | None,
         typer.Option("--client", help="Client ID or exact name; pass --no-client to leave it blank."),
-    ] = None,
+    ] = None
     public: Annotated[
         bool | None,
         typer.Option(
             "--public/--private",
             help="Whether the project is visible to every workspace member; omit to leave the default.",
         ),
-    ] = None,
+    ] = None
     billable: Annotated[
         bool | None,
         typer.Option("--billable/--no-billable", help="Default billable flag for time entries."),
-    ] = None,
-    color: Annotated[
-        str | None,
-        typer.Option("--color", help="Hex colour, e.g. #0f62fe."),
-    ] = None,
-    note: Annotated[
-        str | None,
-        typer.Option("--note", help="Free-form note."),
-    ] = None,
-) -> None:
+    ] = None
+    color: Annotated[str | None, typer.Option("--color", help="Hex colour, e.g. #0f62fe.")] = None
+    note: Annotated[str | None, typer.Option("--note", help="Free-form note.")] = None
+
+
+@APP.command(help="Create a new project.")
+@handle_errors
+@options_from(_CreateOptions)
+def create(ctx: typer.Context, options: _CreateOptions) -> None:
     app_context = get_app_context(ctx)
-    client_id: ClientId | None = ClientId(resolve_client(app_context, client)) if client else None
+    client_id: ClientId | None = ClientId(resolve_client(app_context, options.client)) if options.client else None
     args = _CreateArgs(
-        name=name,
+        name=options.name,
         client_id=client_id,
-        is_public=public,
-        billable=billable,
-        color=color,
-        note=note,
+        is_public=options.public,
+        billable=options.billable,
+        color=options.color,
+        note=options.note,
     )
     payload = ProjectCreate(**{k: v for k, v in dataclasses.asdict(args).items() if v is not None})
     project = app_context.workspace().projects.create(payload)
@@ -120,52 +117,39 @@ class _UpdateArgs:
     archived: bool | None
 
 
-@APP.command(help="Update an existing project.")
-@handle_errors
-def update(  # ruff: ignore[too-many-arguments]  pylint: disable=too-many-arguments
-    ctx: typer.Context,
-    term: Annotated[str, typer.Argument(help="Project ID or exact name.")],
-    *,
-    name: Annotated[
-        str | None,
-        typer.Option("--name", help="New project display name."),
-    ] = None,
-    client: Annotated[
-        str | None,
-        typer.Option("--client", help="New client ID or exact name."),
-    ] = None,
-    public: Annotated[
-        bool | None,
-        typer.Option("--public/--private", help="Toggle the project's visibility."),
-    ] = None,
+@dataclass(frozen=True, slots=True)
+class _UpdateOptions:
+    term: Annotated[str, typer.Argument(help="Project ID or exact name.")]
+    name: Annotated[str | None, typer.Option("--name", help="New project display name.")] = None
+    client: Annotated[str | None, typer.Option("--client", help="New client ID or exact name.")] = None
+    public: Annotated[bool | None, typer.Option("--public/--private", help="Toggle the project's visibility.")] = None
     billable: Annotated[
         bool | None,
         typer.Option("--billable/--no-billable", help="Default billable flag for new entries."),
-    ] = None,
-    color: Annotated[
-        str | None,
-        typer.Option("--color", help="Hex colour, e.g. #0f62fe."),
-    ] = None,
-    note: Annotated[
-        str | None,
-        typer.Option("--note", help="New free-form note."),
-    ] = None,
+    ] = None
+    color: Annotated[str | None, typer.Option("--color", help="Hex colour, e.g. #0f62fe.")] = None
+    note: Annotated[str | None, typer.Option("--note", help="New free-form note.")] = None
     archived: Annotated[
         bool | None,
         typer.Option("--archived/--no-archived", help="Archive or restore the project."),
-    ] = None,
-) -> None:
+    ] = None
+
+
+@APP.command(help="Update an existing project.")
+@handle_errors
+@options_from(_UpdateOptions)
+def update(ctx: typer.Context, options: _UpdateOptions) -> None:
     app_context = get_app_context(ctx)
-    project_id = resolve_project(app_context, term)
-    client_id: ClientId | None = ClientId(resolve_client(app_context, client)) if client else None
+    project_id = resolve_project(app_context, options.term)
+    client_id: ClientId | None = ClientId(resolve_client(app_context, options.client)) if options.client else None
     args = _UpdateArgs(
-        name=name,
+        name=options.name,
         client_id=client_id,
-        is_public=public,
-        billable=billable,
-        color=color,
-        note=note,
-        archived=archived,
+        is_public=options.public,
+        billable=options.billable,
+        color=options.color,
+        note=options.note,
+        archived=options.archived,
     )
     payload = ProjectUpdate(**{k: v for k, v in dataclasses.asdict(args).items() if v is not None})
     project = app_context.workspace().projects.update(project_id, payload)
