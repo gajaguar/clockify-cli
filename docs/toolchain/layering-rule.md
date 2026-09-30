@@ -22,6 +22,7 @@ class of drift this rule exists to prevent.
 | pre-commit                          | `mise.toml`                                | meta-tool; must run before any ecosystem is set up |
 | cspell, markdownlint-cli2           | `package.json`                             | Node dev deps, lockfile-managed                    |
 | ruff, mypy, pyright, pytest, pylint | `pyproject.toml` `[dependency-groups].dev` | Python dev deps, `uv.lock`-managed                 |
+| skills-ref (`agentskills`)          | `pyproject.toml` `[dependency-groups].dev` | Python dev dep, validates `skills/*/SKILL.md`      |
 
 See [`rejected-install-backends.md`](rejected-install-backends.md) for the
 alternatives this decision ruled out.
