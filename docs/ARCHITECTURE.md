@@ -1,5 +1,5 @@
 ---
-type: spec
+type: reference
 title: Architecture and technical specification
 description: The stack, layering, design patterns, authentication and extension checklist of clockify-cli.
 tags: [architecture]
