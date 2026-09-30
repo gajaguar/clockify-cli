@@ -1,7 +1,7 @@
 ---
 type: reference
 title: opencode skill permissions
-description: permission.skill (allow / deny / ask by name pattern) and the per-agent skill: false switch.
+description: permission.skill maps name patterns to allow, deny, or ask, and tools.skill false disables skills per agent.
 tags: [agents, opencode]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -15,27 +15,35 @@ sources:
 
 # opencode skill permissions
 
-Two configuration knobs gate which skills opencode is willing to load.
-Both live in opencode's own config file.[^opencode-skills]
+Two configuration knobs gate which skills opencode loads. Both live in
+opencode's own config file.[^opencode-skills]
 
 ## `permission.skill`
 
-The `permission.skill` key accepts a list of patterns, each one of:
+The `permission.skill` key is an object that maps a skill name or
+wildcard pattern to `"allow"`, `"deny"`, or `"ask"`:
 
-* `"<skill-name>` — allow loading of the named skill.
-* `"ask <skill-name>`":
-  prompt the user before loading.
-* `"deny <skill-name>`:
-  refuse to load the named skill.
+```json
+{
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "internal-*": "deny",
+      "<skill>": "ask"
+    }
+  }
+}
+```
 
-A pattern matches by skill name (the `name` in `SKILL.md`); glob
-patterns are not supported. Default is to allow every discovered
-skill.
+* `"allow"` loads the skill immediately.
+* `"deny"` hides the skill from the agent.
+* `"ask"` prompts the user before loading.
 
 ## Per-agent `skill: false`
 
-Each agent block in the config may set `skill: false` to disable
-skill loading for that agent entirely. Useful when an agent should
-never pick up a skill (for example a documentation-only agent).
+Set `tools: { skill: false }` on an agent to disable the `skill` tool
+for that agent. For a custom agent, put it in the agent's frontmatter;
+for a built-in agent, put it in the agent's entry in `opencode.json`.
+Use this when an agent should never load a skill.
 
 [^opencode-skills]: opencode Skills

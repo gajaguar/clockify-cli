@@ -1,7 +1,7 @@
 ---
 type: playbook
 title: Installing through the Claude Code marketplace
-description: Add a marketplace, install a plugin from it, and reload plugins — the in-session flow.
+description: Add a marketplace and install a plugin from it inside a Claude Code session, including the one-step form and the reload.
 tags: [agents, claude-code]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -15,9 +15,8 @@ sources:
 
 # Installing through the Claude Code marketplace
 
-Use the `/plugin` slash commands inside a Claude Code session to add
-a marketplace, install a plugin from it, and apply the change without
-restarting.[^claude-discover-plugins]
+Use the `/plugin` slash commands inside a Claude Code session to add a
+marketplace and install a plugin from it.[^claude-discover-plugins]
 
 ## Two commands
 
@@ -26,36 +25,44 @@ restarting.[^claude-discover-plugins]
 /plugin install <plugin>@<marketplace>
 ```
 
-`<ref>` defaults to the marketplace's default branch. The marketplace
-name comes from the marketplace's `.claude-plugin/marketplace.json`;
-the plugin name comes from its `.claude-plugin/plugin.json`. Both
+Add `#ref` to pin a branch or tag. `<marketplace>` is the name the
+marketplace registered under, and `<plugin>` is the plugin's name. Both
 names are listed in [`plugin-identity.md`](plugin-identity.md).
 
-## One-command shortcut
+In a session, `/plugin install` does not install right away. It opens
+the `/plugin` panel on the plugin's details so you can review it and
+pick a scope: user, project (all collaborators on the repository), or
+local (you, this repository only).
 
-To add a marketplace and install a plugin from it in a single step,
-pass `--marketplace`:
+## One-step form
+
+To add a marketplace and install from it in one command, pass
+`--marketplace` with the marketplace source. This form requires Claude
+Code v2.1.275 or later.
 
 ```text
-/plugin install <plugin>@<owner>/<repo>[#ref] --marketplace
+/plugin install <plugin> --marketplace <owner>/<repo>
 ```
 
-The install scope defaults to **user** — the plugin is available in
-every project for the current user. Use `--scope project` to scope the
-install to this checkout only. See
-[`claude-code-install-scopes.md`](claude-code-install-scopes.md) for
-what that means on disk.
+Give the plugin name by itself, without an `@<marketplace>` suffix. If
+the marketplace is not added yet, Claude Code shows the source it
+resolved and asks you to confirm before adding it.
+
+## Scope
+
+You choose the scope in the panel, not with a flag. The `--scope` flag
+belongs to the shell command; see
+[`claude-code-shell-install.md`](claude-code-shell-install.md). For what
+each scope writes, see
+[`claude-code-install-scopes.md`](claude-code-install-scopes.md).
 
 ## Reload
 
-A change to the marketplace, a plugin's manifest, or its skills
-requires a reload before Claude Code picks it up:
-
-```text
-/reload-plugins
-```
-
-Run this once after the install, and again whenever you update the
-plugin.
+The install summary ends with one of two outcomes: `Plugin is now
+active.`, or `Run /reload-plugins to activate.` In the second case, the
+panel closes and Claude Code runs the reload for you. If the reload
+would invalidate the prompt cache, Claude Code warns and leaves the
+plugin pending; run `/reload-plugins --force` to activate it
+anyway.[^claude-discover-plugins]
 
 [^claude-discover-plugins]: Discover and install Claude Code plugins

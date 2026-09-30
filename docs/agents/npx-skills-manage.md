@@ -1,7 +1,7 @@
 ---
 type: playbook
 title: Managing installed skills
-description: npx skills list, update, and remove — the day-to-day commands after an install.
+description: npx skills list, update, and remove, plus find, use, and init, as shown by the CLI help.
 tags: [agents, npx-skills]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -15,8 +15,9 @@ sources:
 
 # Managing installed skills
 
-`npx skills` ships three management commands; the install command is
-covered in [`npx-skills-install.md`](npx-skills-install.md).[^vercel-skills]
+`npx skills` manages installed skills with the commands below; the
+install command is covered in
+[`npx-skills-install.md`](npx-skills-install.md).[^vercel-skills]
 
 ## List what is installed
 
@@ -24,26 +25,35 @@ covered in [`npx-skills-install.md`](npx-skills-install.md).[^vercel-skills]
 npx skills list
 ```
 
-Lists every skill the CLI copied into any of the per-agent paths it
-manages. Pass `-a` to scope to one agent.
+`list` (alias `ls`) shows the installed skills.
 
 ## Update
 
 ```bash
-npx skills update
+npx skills update [skills...]
 ```
 
-Re-reads each tracked source repository and overwrites the local files
-when the source changed. There is no auto-update; run this after a
-release or a CI bump.
+`update` (alias `upgrade`) updates skills to their latest versions. Pass
+`-g` for global skills only, `-p` for project skills only, or `-y` to
+skip the scope prompt (it picks project scope inside a project, global
+otherwise).
 
 ## Remove
 
 ```bash
-npx skills remove
+npx skills remove [skills...]
 ```
 
-Removes the skills from every per-agent path they were installed to.
-The source repository is untouched.
+`remove` (alias `rm`) removes installed skills; with no names it opens an
+interactive selection. Pass `-g` for global scope, `-a` for specific
+agents, `-s` for skill names (`'*'` for all), `-y` to skip
+confirmation, or `--all` to remove every installed skill.
+
+## Other commands
+
+* `find [query]` searches for skills interactively.
+* `use <package>@<skill>` generates a prompt for using one skill
+  without installing it.
+* `init [name]` creates a `SKILL.md` for a new skill.
 
 [^vercel-skills]: vercel-labs/skills (the `npx skills` CLI)

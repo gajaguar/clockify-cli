@@ -1,7 +1,7 @@
 ---
 type: reference
 title: Invoking a Claude Code skill
-description: The /<plugin>:<skill> slash form, automatic triggering by description, and how to verify a skill is installed.
+description: The /<plugin>:<skill> slash form, automatic triggering by description, and three ways to verify a plugin skill is installed.
 tags: [agents, claude-code, skills]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -23,37 +23,31 @@ A skill from an installed plugin is invoked two ways.[^claude-skills][^claude-di
 
 ## Explicit invocation
 
-The slash form `<plugin>:<skill>` invokes the skill directly:
+Plugin skills are namespaced as `/<plugin>:<skill>`:
 
 ```text
 /<plugin>:<skill>
 ```
 
-The skill name (`<skill>`) is the directory under the plugin's
-`skills/`. The plugin name (`<plugin>`) is the one in its
-`.claude-plugin/plugin.json`. Both are listed in
-[`plugin-identity.md`](plugin-identity.md).
+`<skill>` is the skill's directory name under the plugin's `skills/`
+folder, or the `name` in its frontmatter when one is set. `<plugin>` is
+the plugin's name. Both are listed in
+[`plugin-identity.md`](plugin-identity.md).[^claude-skills]
 
 ## Automatic triggering
 
-Claude Code reads every installed skill's `description` and may
-trigger one without an explicit slash command when the user's request
-matches the description's phrasing. The description is the only field
-the agent sees before triggering — a skill that wants to be triggered
-must put its user phrasing in `description`.[^claude-skills]
+Claude uses each skill's `description` to decide when to load the skill
+automatically, so put the use case and the user phrasing that should
+trigger the skill in `description`.[^claude-skills]
 
 ## Verifying the install
 
-Inside a Claude Code session:
+Any one of these confirms the plugin is installed:[^claude-discover-plugins]
 
-```text
-/plugin list                # installed plugins
-/<plugin>:                  # tab completion lists the skills'
-```
-
-Outside Claude Code, the install lives under the settings file for the
-scope chosen at install time — see
-[`claude-code-install-scopes.md`](claude-code-install-scopes.md).
+* Type `/` in a session and look for the plugin's skills as `/<plugin>:<skill>`.
+* Open the **Installed** tab in `/plugin`, which lists each plugin with its scope.
+* Run `claude plugin list` in your shell, which prints `Version`,
+  `Scope`, and `Status` for each plugin.
 
 [^claude-skills]: Claude Code skills
 [^claude-discover-plugins]: Discover and install Claude Code plugins
