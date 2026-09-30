@@ -68,7 +68,7 @@ spell: ## Spell-check files with cspell — accepts FILES="..."
 
 commits-check: ## Validate the commit range and branch name against Conventional Commits/Branch — see docs/conventions/commits-check.md
 	@git log --no-merges --format='%B%x00' $(BASE)..HEAD | while IFS= read -r -d '' message; do \
-		message="$${message#$$'\n'}"; [ -z "$$message" ] && continue; \
+		message="$${message#$$'\n'}"; \
 		echo "$$message" | $(CONVENTIONAL_GIT) check commit || exit 1; \
 	done
 	@$(CONVENTIONAL_GIT) check branch --name "$(BRANCH)"
