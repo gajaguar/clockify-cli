@@ -1,8 +1,8 @@
 {
-	"name": "app-template-node-tools",
+	"name": "clockify-cli-tools",
 	"private": true,
 	"devDependencies": {
-		"markdownlint-cli2": "^0.23.3",
-		"cspell": "^10.3.4"
+		"cspell": "^10.3.4",
+		"markdownlint-cli2": "^0.23.3"
 	}
 }

@@ -5,7 +5,6 @@ description: The marketplace, plugin, and skill names for this project, plus the
 resource: https://github.com/gajaguar/clockify-cli
 tags: [agents]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 sources:
   - id: claude-discover-plugins
     resource: https://code.claude.com/docs/en/discover-plugins
@@ -24,6 +23,7 @@ own `.claude-plugin/` and `skills/` directories.
 
 | Asset         | Name                                                    |
 | :------------ | :------------------------------------------------------ |
+| Repository    | `gajaguar/clockify-cli`                                 |
 | Marketplace   | `clockify-cli-skills`                                   |
 | Plugin        | `clockify-cli`                                          |
 

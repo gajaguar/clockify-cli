@@ -4,7 +4,6 @@ title: Invoking a Claude Code skill
 description: The /<plugin>:<skill> slash form, automatic triggering by description, and three ways to verify a plugin skill is installed.
 tags: [agents, claude-code, skills]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: claude-skills

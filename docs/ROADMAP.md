@@ -1,5 +1,5 @@
 ---
-type: plan
+type: playbook
 title: Roadmap
 description: The phased plan to expose every non-deprecated Clockify API operation through the CLI.
 tags: [roadmap]
@@ -59,8 +59,8 @@ A phase is **done** when:
 
 **Status: done.**
 
-- Instantiated `project-template@python`: package `clockify_unofficial_cli`, console
-  script `clockify`.
+- Python package `clockify_unofficial_cli` with the console script
+  `clockify`.
 - Root app with global options (`--profile`, `--workspace`, `--output`,
   `--version`) and shell completion.
 - `AppContext` with a lazy client factory, and `create_app(services_factory)`

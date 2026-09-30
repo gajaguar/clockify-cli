@@ -1,14 +1,13 @@
 [build-system]
-requires = ["hatchling>=1.21"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
 name = "clockify-unofficial-cli"
-version = "0.2.0"
+version = "0.2.1"
 description = "Unofficial command-line interface for Clockify, built on clockify-unofficial-sdk."
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE"]
 authors = [
   { name = "G.A.JAGUAR", email = "dev@gajaguar.com" },
 ]
@@ -34,38 +33,24 @@ dependencies = [
 [project.scripts]
 clockify = "clockify_unofficial_cli.main:run"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/clockify_unofficial_cli"]
-
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "--cov --cov-report=term-missing --cov-fail-under=90 -m 'not live'"
+addopts = "--cov=src --cov-report=term-missing --cov-fail-under=90 -m 'not live'"
 markers = [
   "live: hits the real Clockify API (requires CLOCKIFY_TEST_API_KEY)",
 ]
 
-[tool.coverage.run]
-source = ["src/clockify_unofficial_cli"]
-
 [tool.coverage.report]
-show_missing = true
-exclude_lines = [
-  "pragma: no cover",
-  "if __name__ == .__main__.:",
-  "raise NotImplementedError",
-  "if TYPE_CHECKING:",
-]
+exclude_also = ["if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.ruff]
-target-version = "py314"
 line-length = 119
 lint.select = ["ALL"]
-lint.ignore = ["missing-trailing-comma", "CPY", "D"]
+lint.ignore = ["CPY", "D", "missing-trailing-comma"]
 lint.isort.force-single-line = true
 lint.isort.case-sensitive = true
 # Typer resolves command signatures at runtime, so their annotation imports must stay real imports.
-lint.per-file-ignores."src/clockify_unofficial_cli/commands/**/*.py" = ["typing-only-first-party-import", "typing-only-third-party-import", "typing-only-standard-library-import"]
-lint.per-file-ignores."tests/**/*.py" = [ "ANN", "ARG", "boolean-type-hint-positional-argument", "magic-value-comparison", "assert", "private-member-access"]
+lint.per-file-ignores."src/clockify_unofficial_cli/commands/**/*.py" = ["typing-only-standard-library-import", "typing-only-third-party-import"]
+lint.per-file-ignores."tests/**/*.py" = ["ARG", "boolean-type-hint-positional-argument", "magic-value-comparison", "assert"]
 
 [tool.mypy]
 strict = true
@@ -80,7 +65,6 @@ enable = ["gajaguar"]
 
 [tool.pyright]
 include = ["src"]
-exclude = ["**/.venv", "**/node_modules", "tests"]
 
 [dependency-groups]
 dev = [
@@ -97,4 +81,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v1.0.0" }
+clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v1.0.1" }

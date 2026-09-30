@@ -1,5 +1,5 @@
 ---
-type: procedure
+type: playbook
 title: Releasing to PyPI
 description: A GitHub release whose tag matches project.version triggers the publish workflow, which uploads through PyPI Trusted Publishing.
 tags: [toolchain, release]

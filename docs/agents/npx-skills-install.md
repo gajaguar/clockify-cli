@@ -4,7 +4,6 @@ title: Installing skills with `npx skills`
 description: npx skills add installs a repository's skills into one or more agent paths, symlinked by default, with flags for agent, scope, skill selection, and list-only.
 tags: [agents, npx-skills]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: vercel-skills

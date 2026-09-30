@@ -4,7 +4,6 @@ title: Installing from a script or CI
 description: The claude plugin CLI installs and manages plugins from your shell, with user scope by default and a --yes flag for command-source prompts.
 tags: [agents, claude-code, ci]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: claude-discover-plugins

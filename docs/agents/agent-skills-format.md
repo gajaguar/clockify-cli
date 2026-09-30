@@ -4,7 +4,6 @@ title: Agent Skills format
 description: SKILL.md frontmatter fields and their constraints, progressive disclosure, and the optional references/ subdirectory.
 tags: [agents, skills]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: agentskills-spec
