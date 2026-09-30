@@ -29,3 +29,8 @@ See [`log.md`](log.md) for the bundle's change history.
 
 * [Python](python/index.md) - the interpreter source and the
   `pyproject.toml` settings left out on purpose.
+
+## Agents
+
+* [Agents](agents/index.md) - install the skills in Claude Code, in
+  `npx skills`, or in opencode, and learn what each channel delivers.

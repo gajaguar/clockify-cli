@@ -18,3 +18,5 @@ gajaguar/clockify-cli`. It ships two Agent Skills under `skills/`:
 `skills/*/SKILL.md` against the Agent Skills spec. A unit test fails when
 `plugin.json`'s `version` differs from `project.version`, so a release bumps
 both. The plugin has no MCP server.
+
+See [`docs/agents/`](../agents/index.md) for install channels, scopes, and management.

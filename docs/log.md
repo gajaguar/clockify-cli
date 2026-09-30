@@ -1,5 +1,14 @@
 # Directory Update Log
 
+## 2026-09-29 (Agents)
+
+* **Addition**: Added `docs/agents/` with `plugin-identity.md` filled in for
+  this project (marketplace `clockify-cli-skills`, plugin `clockify-cli`,
+  skills `clockify-time-tracking` and `clockify-cli`), the
+  byte-identical shared notes that ship with the template, and the
+  per-project index in `docs/agents/index.md`. No MCP server for this
+  project.
+
 ## 2026-09-29 (Plugin)
 
 * **Addition**: Added `toolchain/claude-plugin.md`, which describes the Claude
