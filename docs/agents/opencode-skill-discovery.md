@@ -1,7 +1,7 @@
 ---
 type: reference
 title: opencode skill discovery
-description: The paths opencode scans for skills, the worktree walk-up rule, the skill tool, and name validation.
+description: The project and global paths opencode reads skills from, the walk-up to the git worktree, and the name and description rules.
 tags: [agents, opencode]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -20,35 +20,32 @@ through the `skill` tool.[^opencode-skills]
 
 ## Project paths
 
-opencode scans, in priority order:
+Each skill is a folder containing a `SKILL.md`:
 
-1. `.opencode/skill/` in the working directory
-2. `.claude/skills/` in the working directory
-3. `.agents/skills/` in the working directory
+* `.opencode/skills/<skill>/SKILL.md`
+* `.claude/skills/<skill>/SKILL.md`
+* `.agents/skills/<skill>/SKILL.md`
 
 ## Worktree walk-up
 
-The scan walks the directory tree up to the worktree root (typically
-the git worktree's top), not the filesystem root. A skill placed in a
-project's top-level `.opencode/skill/` is visible from any subdirectory
-of the same worktree.
+opencode walks up from the current working directory until it reaches
+the git worktree, loading matching skill files along the way. A skill
+in the worktree's top-level `.opencode/skills/` is therefore visible from
+any subdirectory of the same worktree.
 
 ## Global paths
 
-When no project skill matches, opencode falls back to:
+opencode also loads global definitions:
 
-* `~/.config/opencode/skill/`
-* `~/.claude/skills/`
-* `~/.agents/skills/`
+* `~/.config/opencode/skills/<skill>/SKILL.md`
+* `~/.claude/skills/<skill>/SKILL.md`
+* `~/.agents/skills/<skill>/SKILL.md`
 
-The `skill` tool can list every discovered skill and load any one of
-them into context on demand.
+## Frontmatter and name validation
 
-## Name validation
-
-opencode validates each `SKILL.md`'s `name` field: it must match the
-folder name, must be lowercase, and may only contain letters, digits,
-and dashes. A skill whose `name` does not match its folder is
-silently skipped.
+`name` and `description` are required; `license`, `compatibility`, and
+`metadata` are optional. The `name` must be 1-64 characters, match
+`^[a-z0-9]+(-[a-z0-9]+)*$`, and match the containing directory name. The
+`description` must be 1-1024 characters.
 
 [^opencode-skills]: opencode Skills

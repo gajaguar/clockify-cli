@@ -1,7 +1,7 @@
 ---
 type: playbook
 title: Installing skills with `npx skills`
-description: npx skills add copies a repo's skills/ into one or more agent paths; flags for scope, list-only, and global install.
+description: npx skills add installs a repository's skills into one or more agent paths, symlinked by default, with flags for agent, scope, skill selection, and list-only.
 tags: [agents, npx-skills]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -20,42 +20,47 @@ sources:
 # Installing skills with `npx skills`
 
 `npx skills` ([vercel-labs/skills](https://github.com/vercel-labs/skills))
-copies a repository's `skills/` directory into the path each agent
-expects, no plugin hooks or MCP. It is the right channel when the
-agent is not Claude Code or the project does not need auto-update.[^vercel-skills]
+installs a repository's skills into the path each agent expects, with no
+plugin hooks or MCP. By default it symlinks each agent to one canonical
+copy; pass `--copy` for independent copies. It is the right channel when
+the agent is not Claude Code or the project does not need
+auto-update.[^vercel-skills]
 
-## Install one or more agents at once
+## Install for several agents at once
 
 ```bash
 npx skills add <owner>/<repo> -a claude-code -a opencode -y
 ```
 
-`-a` accepts `claude-code`, `opencode`, and others. `-y` accepts the
-prompts.
+`-a` names an agent (for example `claude-code` or `opencode`); use
+`-a '*'` for every agent. `-y` skips the confirmation prompts.
 
 ## Flags
 
-| Flag       | Effect                                                              |
-| :--------- | :------------------------------------------------------------------ |
-| `-a AGENT` | Add an agent to the install; pass twice for two agents              |
-| `-g`       | Global install (user scope) instead of the current directory        |
-| `-s`       | Symlink instead of copy                                             |
-| `-y`       | Accept every prompt                                                 |
-| `--list`   | Print the skills the install would write; do not write              |
-| `--copy`   | Copy the skills into the working directory instead of installing    |
+| Flag                 | Effect                                                                 |
+| :------------------- | :--------------------------------------------------------------------- |
+| `-a, --agent`        | Agents to install to; `'*'` for all agents                             |
+| `-s, --skill`        | Skill names to install; `'*'` for all skills                           |
+| `-g, --global`       | Install at user level instead of project level                         |
+| `-l, --list`         | List the skills in the repository without installing                   |
+| `-y, --yes`          | Skip confirmation prompts                                              |
+| `--copy`             | Copy files instead of symlinking to the agent directories              |
+| `--all`              | Shorthand for `--skill '*' --agent '*' -y`                             |
+| `--json`             | Machine-readable output with no ANSI codes                             |
+| `--full-depth`       | Search all subdirectories even when a root `SKILL.md` exists           |
 
 ## Where `npx skills` writes
 
-`npx skills add` chooses a per-agent path automatically. The full
-list comes from the CLI's own help; the most common paths are:
+Project scope is the default; `-g` writes to the user-level path. The
+paths for the two agents this documentation covers:[^vercel-skills]
 
-| Agent         | Project path          | Global path                  |
-| :------------ | :-------------------- | :--------------------------- |
-| `claude-code` | `.claude/skills/`     | `~/.claude/skills/`          |
-| `opencode`    | `.opencode/skills/`   | `~/.config/opencode/skills/` |
+| Agent         | Project path       | Global path                  |
+| :------------ | :----------------- | :--------------------------- |
+| `claude-code` | `.claude/skills/`  | `~/.claude/skills/`          |
+| `opencode`    | `.agents/skills/`  | `~/.config/opencode/skills/` |
 
-Run `npx skills add --list <owner>/<repo>` first when the destination
-is unclear — it prints the resolved targets without writing.[^skills-sh]
+Run `npx skills add <owner>/<repo> --list` first to see which skills the
+repository offers without installing anything.[^skills-sh]
 
 [^vercel-skills]: vercel-labs/skills (the `npx skills` CLI)
 [^skills-sh]: skills.sh

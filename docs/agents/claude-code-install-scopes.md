@@ -19,35 +19,33 @@ sources:
 
 # Claude Code install scopes
 
-Every install — by `/plugin install` or `claude plugin install` —
-writes to a settings file under one of three scopes.[^claude-discover-plugins]
-Higher scopes win when the same key is set in more than
-one.[^claude-loading]
+Every install, by `/plugin install` or `claude plugin install`, is
+recorded in a settings file under one of three scopes.[^claude-discover-plugins]
 
-| Scope    | Settings file                                       | Shared with   |
-| :------- | :-------------------------------------------------- | :------------ |
-| `user`   | `~/.claude/settings.json`                           | Nothing       |
-| `project`| `.claude/settings.json` in the repo root            | Collaborators |
-| `local`  | `.claude/settings.local.json` (gitignored)          | Nothing       |
+| Scope     | Settings file                        | Reaches                                 |
+| :-------- | :----------------------------------- | :-------------------------------------- |
+| `user`    | `~/.claude/settings.json`            | You, in every project on this machine   |
+| `project` | `.claude/settings.json` (committed)  | Everyone who works in the repository    |
+| `local`   | `.claude/settings.local.json`        | You, in this repository only            |
+
+The entry is written under `enabledPlugins` in that file.
 
 ## Which scope to pick
 
-* **`user`** — the default. The install follows the user across every
-  project they open. Use it for skills you want everywhere.
-* **`project`** — the install is committed in `.claude/settings.json`
-  and shared with collaborators on the same repo. Use it when the
-  project itself depends on the plugin. Expect collaborators to
-  approve the change.
-* **`local`** — the install lives in a gitignored file and follows
-  the working tree only. Use it for personal overrides that must not
-  pollute `git status`.
+* **`user`**: the default for `claude plugin install`. Use it for
+  plugins you want in every project.
+* **`project`**: the entry lives in the committed `.claude/settings.json`.
+  Use it when the repository itself depends on the plugin. Committing the
+  entry enables the plugin for collaborators but does not download it, so
+  each collaborator runs
+  `claude plugin install <plugin>@<marketplace> --scope project` once.[^claude-loading]
+* **`local`**: the entry lives in `.claude/settings.local.json`. Use it
+  for a personal setup in one repository.
 
 ## Precedence
 
-When the same setting is set in more than one scope, `local` wins
-over `project`, which wins over `user`. A `project`-scope install is
-overridden by a `local`-scope override in the same working
-tree.[^claude-loading]
+When the same plugin is set at several scopes, `local` overrides
+`project`, and `project` overrides `user`.[^claude-loading]
 
 [^claude-discover-plugins]: Discover and install Claude Code plugins
 [^claude-loading]: How Claude Code loads plugins

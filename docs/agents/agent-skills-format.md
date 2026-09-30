@@ -1,7 +1,7 @@
 ---
 type: reference
 title: Agent Skills format
-description: SKILL.md, its required and recommended fields, progressive disclosure, and the references/ subdirectory.
+description: SKILL.md frontmatter fields and their constraints, progressive disclosure, and the optional references/ subdirectory.
 tags: [agents, skills]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -15,30 +15,55 @@ sources:
 
 # Agent Skills format
 
-An Agent Skill is a directory that contains a `SKILL.md` file with YAML
-frontmatter. A skill's `description` is what Claude Code and other
-agents scan to decide when to trigger the skill automatically.[^agentskills-spec]
+An Agent Skill is a directory that contains a `SKILL.md` file: YAML
+frontmatter followed by Markdown instructions. Agents load the `name`
+and `description` at startup to decide when a skill applies.[^agentskills-spec]
 
-| Field           | Required | Purpose                                                              |
-| :-------------- | :------- | :------------------------------------------------------------------- |
-| `name`          | Yes      | Skill identifier; lowercase, kebab-case, matches the folder name     |
-| `description`   | Yes      | What the skill does and the user phrasing that should trigger it     |
-| `license`       | No       | SPDX identifier or short license note                                |
-| `compatibility` | No       | Run-time requirements (CLI version, Python, env vars)                |
-| `allowed-tools` | No       | Tools the skill is permitted to call (Claude Code)                   |
-| `metadata`      | No       | Free-form key/value tags                                             |
+| Field           | Required | Purpose                                     |
+| :-------------- | :------- | :------------------------------------------ |
+| `name`          | Yes      | Skill identifier                            |
+| `description`   | Yes      | What the skill does and when to use it      |
+| `license`       | No       | License name or bundled license file        |
+| `compatibility` | No       | Environment requirements                    |
+| `metadata`      | No       | String-to-string map of extra properties    |
+| `allowed-tools` | No       | Pre-approved tools (experimental)           |
+
+Constraints from the specification:[^agentskills-spec]
+
+* `name`: 1-64 characters; lowercase letters, digits, and hyphens only;
+  no leading, trailing, or consecutive hyphens; must match the parent
+  directory name.
+* `description`: 1-1024 characters; say what the skill does and when to
+  use it.
+* `license`: a license name or a reference to a bundled license file;
+  keep it short.
+* `compatibility`: 1-500 characters; for example the intended product,
+  system packages, or network access.
+* `metadata`: a map from string keys to string values; use reasonably
+  unique key names.
+* `allowed-tools`: a space-separated string of pre-approved tools.
+  Experimental, so support varies between agents.
 
 ## Progressive disclosure
 
-A skill's `SKILL.md` is loaded up front so the agent knows it exists.
-The body and any `references/` files are loaded only when the skill is
-triggered, so a large skill is cheap until it is needed. Keep `SKILL.md`
-short: the spec recommends under 500 lines.[^agentskills-spec]
+Agents load a skill in three steps:[^agentskills-spec]
+
+1. **Metadata** (about 100 tokens): `name` and `description`, loaded
+   at startup for every skill.
+2. **Instructions** (under 5000 tokens recommended): the full
+   `SKILL.md` body, loaded when the skill activates.
+3. **Resources**: files under `scripts/`, `references/`, or `assets/`,
+   loaded only when needed.
+
+Keep `SKILL.md` under 500 lines and move detailed material into
+separate files.
 
 ## `references/` subdirectory
 
-A skill may put deeper material under `references/` (for example
-`references/exit-codes.md`) and link to it from the body. Each
-`references/*.md` carries its own frontmatter and is loaded on demand.
+A skill may put additional documentation under `references/` (for
+example `REFERENCE.md` or a domain-specific file) and link to it with a
+relative path from the skill root. Agents read these files on demand, so
+keep each one focused. Keep references one level deep from
+`SKILL.md`.[^agentskills-spec]
 
 [^agentskills-spec]: Agent Skills specification

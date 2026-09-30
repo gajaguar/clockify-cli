@@ -1,7 +1,7 @@
 ---
 type: playbook
 title: Installing from a script or CI
-description: The `claude plugin` CLI mirrors the /plugin slash commands and is what to call from a script or CI job.
+description: The claude plugin CLI installs and manages plugins from your shell, with user scope by default and a --yes flag for command-source prompts.
 tags: [agents, claude-code, ci]
 status: stable
 generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
@@ -19,43 +19,41 @@ sources:
 
 # Installing from a script or CI
 
-The `claude plugin` subcommand mirrors the `/plugin` slash
-commands[^claude-discover-plugins] and is what a script or CI job
-calls. It is non-interactive when called without a TTY and accepts
-`--yes` to skip every confirmation prompt.[^claude-cli-reference]
+Run `claude plugin` subcommands in your shell to install and manage
+plugins without starting a Claude Code session, for example from a setup
+script.[^claude-discover-plugins]
 
 ## Commands
 
 ```bash
-claude plugin marketplace add <owner>/<repo>[#ref] --scope user
-claude plugin install <plugin>@<marketplace> --scope user --yes
+claude plugin marketplace add <owner>/<repo>[#ref]
+claude plugin install <plugin>@<marketplace>
 claude plugin list
 ```
 
+The marketplace must be added before you install from it.
+
 ## Scopes
 
-`--scope` accepts `user`, `project`, or `local`. The default scope
-depends on whether the command runs inside a project directory; pass
-`--scope` explicitly in scripts so the install does not depend on the
-working directory. See
-[`claude-code-install-scopes.md`](claude-code-install-scopes.md) for
-what each scope writes to.
+`claude plugin install` installs at user scope by default. Pass
+`--scope project` or `--scope local` to change it. `claude plugin
+enable` and `claude plugin disable` act on the most specific scope whose
+settings already list the plugin unless you pass `--scope`. See
+[`claude-code-install-scopes.md`](claude-code-install-scopes.md) for what
+each scope writes to.[^claude-cli-reference]
 
-## CI recipe
+## The `--yes` flag
 
-A CI job that needs the plugin only for the duration of the run
-should install at `user` scope, run the gate, and uninstall at the
-end:
+Some plugins install by running a command their marketplace names (a
+`command` source). Claude Code shows the command and asks you to accept
+it. A script has no one to answer, so pass `--yes` to accept that prompt.
+`--yes` does not skip any other prompt.[^claude-cli-reference]
 
-```bash
-claude plugin marketplace add <repo> --scope user --yes
-claude plugin install <plugin>@<marketplace> --scope user --yes
-make check
-claude plugin marketplace remove <name> --scope user --yes
-```
+## When plugins load
 
-The marketplace add/remove pair is needed even when uninstalling,
-because a marketplace entry persists after a plugin uninstall.[^claude-cli-reference]
+Plugins you install from the shell load the next time you start Claude
+Code, or when you run `/reload-plugins` in a session that is already
+open.[^claude-discover-plugins]
 
 [^claude-discover-plugins]: Discover and install Claude Code plugins
 [^claude-cli-reference]: Claude Code plugin CLI reference
