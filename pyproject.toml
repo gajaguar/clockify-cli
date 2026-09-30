@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "clockify-unofficial-cli"
-version = "0.2.0"
+version = "0.2.1"
 description = "Unofficial command-line interface for Clockify, built on clockify-unofficial-sdk."
 readme = "README.md"
 license = "MIT"
@@ -81,4 +81,4 @@ dev = [
 ]
 
 [tool.uv.sources]
-clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v1.0.0" }
+clockify-unofficial-sdk = { git = "https://github.com/gajaguar/clockify-sdk", tag = "v1.0.1" }
