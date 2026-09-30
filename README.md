@@ -115,12 +115,20 @@ documentation tools, and the pre-commit hook.
 
 ## Agent skills
 
-The repository is also a Claude Code plugin. Add the marketplace, then install
-the plugin to give an agent the context to drive `clockify`:
+The repository is also a Claude Code plugin. Pick one channel:
 
 ```text
+# Claude Code
 /plugin marketplace add gajaguar/clockify-cli
 /plugin install clockify-cli@clockify-cli-skills
+```
+
+```bash
+# Any Agent Skills-compatible agent
+npx skills add gajaguar/clockify-cli
+
+# opencode
+npx skills add gajaguar/clockify-cli -a opencode -y
 ```
 
 - `clockify-time-tracking` covers `start`, `stop`, `status`, `log` and `entry`.
@@ -129,7 +137,8 @@ the plugin to give an agent the context to drive `clockify`:
 
 The skills follow the [Agent Skills](https://agentskills.io/specification)
 format, so other agents can read `skills/` directly. They require the CLI to
-be installed and a user to have run `clockify auth login`.
+be installed and a user to have run `clockify auth login`. See
+[`docs/agents/`](docs/agents/index.md) for what each install channel does.
 
 ## Usage
 
