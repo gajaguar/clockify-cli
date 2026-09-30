@@ -10,3 +10,5 @@ and why.
   out.
 * [Releasing to PyPI](releasing.md) - how a GitHub release publishes the
   package through Trusted Publishing.
+* [The Claude Code plugin](claude-plugin.md) - the agent skills the
+  repository ships and how they are validated.

@@ -1,5 +1,12 @@
 # Directory Update Log
 
+## 2026-09-29 (Plugin)
+
+* **Addition**: Added `toolchain/claude-plugin.md`, which describes the Claude
+  Code plugin and its two skills.
+* **Update**: Added the `skills-ref` row to `toolchain/layering-rule.md` and
+  the manifest version to the steps in `toolchain/releasing.md`.
+
 ## 2026-09-29
 
 * **Restructure**: Brought `docs/` to an OKF bundle: added frontmatter to

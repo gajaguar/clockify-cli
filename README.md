@@ -19,6 +19,7 @@ Unofficial command-line interface for Clockify, built on
 - [Getting started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+- [Agent skills](#agent-skills)
 - [Usage](#usage)
   - [Commands](#commands)
   - [Global options](#global-options)
@@ -112,6 +113,24 @@ make install
 `make install` installs the pinned toolchain, Python dependencies, Node-based
 documentation tools, and the pre-commit hook.
 
+## Agent skills
+
+The repository is also a Claude Code plugin. Add the marketplace, then install
+the plugin to give an agent the context to drive `clockify`:
+
+```text
+/plugin marketplace add gajaguar/clockify-cli
+/plugin install clockify-cli@clockify-cli-skills
+```
+
+- `clockify-time-tracking` covers `start`, `stop`, `status`, `log` and `entry`.
+- `clockify-cli` covers authentication, profiles, workspaces and the
+  project, task, tag, client, group and custom-field commands.
+
+The skills follow the [Agent Skills](https://agentskills.io/specification)
+format, so other agents can read `skills/` directly. They require the CLI to
+be installed and a user to have run `clockify auth login`.
+
 ## Usage
 
 Log in interactively. The key is read from a hidden prompt, validated with
@@ -142,7 +161,12 @@ printf '%s' "$KEY" | clockify -p work auth login --with-token --region EU_CENTRA
 - `config list` lists configured profiles.
 - `config use NAME` sets the default profile.
 
-Resource commands arrive in phases. See the
+- `start`, `stop`, `status` and `log` track time.
+- `workspace`, `user`, `client`, `project`, `task`, `tag`, `group`,
+  `custom-field` and `entry` manage resources; run `clockify COMMAND --help`
+  for their verbs.
+
+Remaining resource commands arrive in phases. See the
 [roadmap](docs/ROADMAP.md) and [coverage matrix](docs/coverage.md) for their
 status.
 

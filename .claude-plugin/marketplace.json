@@ -1,0 +1,15 @@
+{
+  "name": "clockify-cli-skills",
+  "description": "Clockify time-tracking and workspace skills for Claude Code",
+  "owner": {
+    "name": "G.A.JAGUAR",
+    "email": "dev@gajaguar.com"
+  },
+  "plugins": [
+    {
+      "name": "clockify-cli",
+      "source": "./",
+      "description": "Skills that teach an agent to drive the unofficial Clockify CLI"
+    }
+  ]
+}
