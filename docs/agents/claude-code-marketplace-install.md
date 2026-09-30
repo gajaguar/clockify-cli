@@ -4,7 +4,6 @@ title: Installing through the Claude Code marketplace
 description: Add a marketplace and install a plugin from it inside a Claude Code session, including the one-step form and the reload.
 tags: [agents, claude-code]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: claude-discover-plugins

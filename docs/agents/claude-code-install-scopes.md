@@ -4,7 +4,6 @@ title: Claude Code install scopes
 description: user, project, and local scopes — which settings file each writes to, the precedence order, and when each is the right choice.
 tags: [agents, claude-code]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: claude-discover-plugins

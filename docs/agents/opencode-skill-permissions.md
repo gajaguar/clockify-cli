@@ -4,7 +4,6 @@ title: opencode skill permissions
 description: permission.skill maps name patterns to allow, deny, or ask, and tools.skill false disables skills per agent.
 tags: [agents, opencode]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: opencode-skills

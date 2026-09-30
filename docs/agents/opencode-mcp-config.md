@@ -4,7 +4,6 @@ title: opencode MCP configuration
 description: The mcp key for local and remote servers, the config file precedence list, and the opencode mcp commands.
 tags: [agents, opencode, mcp]
 status: stable
-generated: { by: claude-code/claude-opus-5-5, at: 2026-09-29T00:00:00Z }
 stale_after: 2027-03-29T00:00:00Z
 sources:
   - id: opencode-mcp
