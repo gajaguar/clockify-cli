@@ -174,7 +174,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clockify-unofficial-sdk", git = "https://github.com/gajaguar/clockify-sdk?tag=v1.6.0" },
+    { name = "clockify-unofficial-sdk", specifier = ">=1.6,<2" },
     { name = "keyring", specifier = ">=25.0" },
     { name = "platformdirs", specifier = ">=4.0" },
     { name = "pydantic", specifier = ">=2.9" },
@@ -200,10 +200,14 @@ dev = [
 [[package]]
 name = "clockify-unofficial-sdk"
 version = "1.6.0"
-source = { git = "https://github.com/gajaguar/clockify-sdk?tag=v1.6.0#9d63cb3a6711e0ebee590b3aa6a7200a4903336b" }
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5d/74/831ecfb67b0c17986f05c28889054590a5ade1104ea375f21af456f468c0/clockify_unofficial_sdk-1.6.0.tar.gz", hash = "sha256:a4cfefc05f2c6af2e7eddfea320a8173fa8cd869b30c0650558d93d02bb144a2", size = 149671, upload-time = "2026-10-01T16:37:11.739Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ea/ce/317b36280b05b4e9457fc0810401c94d4b5809e1106cf80f75ab87d07041/clockify_unofficial_sdk-1.6.0-py3-none-any.whl", hash = "sha256:f2824eab0f016f89ab43167127a74f12b0958e78655ccbbf6d2f9807ccbffe3a", size = 53094, upload-time = "2026-10-01T16:37:10.196Z" },
 ]
 
 [[package]]

@@ -356,8 +356,8 @@ by `hint: <next step>`.
 ## Adding a command
 
 1. Confirm the SDK exposes the endpoint (check the SDK's `docs/coverage.md`).
-   If not, add it there first and release a tag. Then bump the tag in
-   `[tool.uv.sources]`.
+   If not, add it there first and publish a release. Then raise the SDK
+   floor in `pyproject.toml`.
 2. Add or extend `commands/<domain>.py`:
    - Declare options inline with `Annotated[..., typer.Option(...)]`. Typer
      can't resolve PEP 695 `type` aliases.

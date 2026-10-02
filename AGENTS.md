@@ -92,8 +92,8 @@ Once a pull request is open, the agent MUST:
 
 - Reach Clockify only through `clockify-unofficial-sdk`, never with `httpx`
   or a hand-built URL, so retries, pagination and models stay in one place.
-  Add a missing capability to the SDK first and pin its tag in
-  `[tool.uv.sources]`; see
+  Add a missing capability to the SDK first and raise the SDK floor in
+  `pyproject.toml` once it is released; see
   [Cross-repo workflow](docs/ROADMAP.md#cross-repo-workflow).
 - Expose each command module as `APP: Final = typer.Typer(...)`, decorate
   every command with `@APP.command(help=...)` then `@handle_errors`, and
