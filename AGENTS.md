@@ -83,6 +83,9 @@ Once a pull request is open, the agent MUST:
   keep a `lint.per-file-ignores` entry only while it matches a current
   violation; see
   [`docs/python/pyproject-defaults.md`](docs/python/pyproject-defaults.md).
+- Tag a minor or major bump with `make release-tag` after its pull request
+  merges, as [`docs/conventions/versioning.md`](docs/conventions/versioning.md)
+  describes; the target tags the base branch as `v<project.version>`.
 
 ## Architecture
 

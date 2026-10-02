@@ -58,5 +58,12 @@ build: ## Build the sdist and wheel into dist/
 	rm -rf dist
 	$(UV) build
 
+release-tag: ## Tag the base branch as v<project.version> and push the tag (minor and major bumps)
+	@version=$$($(UV) run python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'); base=$(BASE:origin/%=%); tag=v$$version; \
+	test "$$(git rev-parse --abbrev-ref HEAD)" = "$$base" && test -z "$$(git status --porcelain)" || { echo "release-tag: run it from a clean $$base"; exit 1; }; \
+	git fetch --quiet origin && test "$$(git rev-parse HEAD)" = "$$(git rev-parse origin/$$base)" || { echo "release-tag: $$base is not at origin/$$base"; exit 1; }; \
+	git rev-parse --quiet --verify "refs/tags/$$tag" >/dev/null && { echo "release-tag: $$tag already exists"; exit 1; }; \
+	git tag -a "$$tag" -m "$$tag" && git push origin "$$tag"
+
 .PHONY: install-python lint format-check mypy pyright typecheck pylint conventional-git-latest \
-	format lint-fix lint-fix-unsafe pytest coverage build
+	format lint-fix lint-fix-unsafe pytest coverage build release-tag

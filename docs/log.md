@@ -50,6 +50,8 @@
 * **Addition**: `AGENTS.md` links to `conventions/versioning.md`.
 * **Change**: `conventions/tag-vocabulary.md` states the tag form: lowercase, one
   word by default, no parent prefix.
+* **Addition**: `make release-tag` (`mk/python.mk`) tags the base branch as
+  `v<project.version>` after a minor or major bump merges.
 
 ## 2026-10-01
 
