@@ -6,6 +6,7 @@ import pytest
 
 from clockify_unofficial_cli.runtime.errors import CliError
 from clockify_unofficial_cli.runtime.exit_codes import ExitCode
+from clockify_unofficial_cli.services.parsing import parse_date
 from clockify_unofficial_cli.services.parsing import parse_duration
 from clockify_unofficial_cli.services.parsing import parse_instant
 
@@ -119,3 +120,12 @@ def test_parse_instant_rejects_invalid_input() -> None:
         parse_instant(value)
     # Assert
     assert caught.value.exit_code == ExitCode.USAGE
+
+
+def test_parse_date_keeps_the_calendar_day() -> None:
+    # Arrange
+    value = "2026-09-14"
+    # Act
+    result = parse_date(value)
+    # Assert
+    assert result == datetime.date(2026, 9, 14)

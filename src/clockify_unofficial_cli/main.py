@@ -13,6 +13,7 @@ from clockify_unofficial_cli.auth.env_store import EnvCredentialStore
 from clockify_unofficial_cli.auth.file_store import FileCredentialStore
 from clockify_unofficial_cli.auth.keyring_store import KeyringCredentialStore
 from clockify_unofficial_cli.auth.resolver import CredentialStores
+from clockify_unofficial_cli.commands import approval
 from clockify_unofficial_cli.commands import auth
 from clockify_unofficial_cli.commands import client
 from clockify_unofficial_cli.commands import config
@@ -24,6 +25,7 @@ from clockify_unofficial_cli.commands import report
 from clockify_unofficial_cli.commands import shared_report
 from clockify_unofficial_cli.commands import tag
 from clockify_unofficial_cli.commands import task
+from clockify_unofficial_cli.commands import time_off
 from clockify_unofficial_cli.commands import timer_shortcuts
 from clockify_unofficial_cli.commands import user
 from clockify_unofficial_cli.commands import webhook
@@ -124,6 +126,8 @@ def create_app(services_factory: Callable[[], Services] = default_services) -> t
     cli.add_typer(group.APP, name="group")
     cli.add_typer(entry.APP, name="entry")
     cli.add_typer(report.APP, name="report")
+    cli.add_typer(time_off.APP, name="time-off")
+    cli.add_typer(approval.APP, name="approval")
     cli.add_typer(shared_report.APP, name="shared-report")
     cli.add_typer(webhook.APP, name="webhook")
     cli.registered_commands.extend(timer_shortcuts.APP.registered_commands)

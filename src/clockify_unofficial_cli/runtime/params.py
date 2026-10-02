@@ -3,7 +3,9 @@ from __future__ import annotations
 import dataclasses
 import functools
 import inspect
+from dataclasses import dataclass
 from typing import TYPE_CHECKING
+from typing import Annotated
 
 import typer
 
@@ -40,3 +42,14 @@ def options_from[T, R](options: type[T]) -> Callable[[Callable[[typer.Context, T
         return wrapper
 
     return decorate
+
+
+# Shared by every list command; keyword-only so a subclass can still declare required arguments.
+@dataclass(frozen=True, slots=True, kw_only=True)
+class PagingOptions:
+    limit: Annotated[
+        int | None,
+        typer.Option("--limit", help="Stop after N rows; incompatible with --page/--page-size."),
+    ] = None
+    page: Annotated[int | None, typer.Option("--page", help="1-based page number when paging through results.")] = None
+    page_size: Annotated[int | None, typer.Option("--page-size", help="Page size when paging through results.")] = None

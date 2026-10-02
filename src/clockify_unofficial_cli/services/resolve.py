@@ -96,6 +96,12 @@ def resolve_group(app_context: AppContext, term: str) -> str:
     return resolve(term, candidates, noun="group")
 
 
+def resolve_policy(app_context: AppContext, term: str) -> str:
+    workspace = app_context.workspace()
+    candidates = _candidate_ids_from(workspace.time_off_policies.list(), name=lambda item: item.name or str(item.id))
+    return resolve(term, candidates, noun="time off policy")
+
+
 def resolve_webhook(app_context: AppContext, term: str) -> str:
     workspace = app_context.workspace()
     candidates = _candidate_ids_from(workspace.webhooks.list(), name=lambda item: item.name or item.url)
@@ -127,6 +133,7 @@ __all__ = [
     "resolve_client",
     "resolve_custom_field",
     "resolve_group",
+    "resolve_policy",
     "resolve_project",
     "resolve_tag",
     "resolve_task",

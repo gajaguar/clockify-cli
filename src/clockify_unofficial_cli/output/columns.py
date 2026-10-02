@@ -130,3 +130,70 @@ REPORT_ENTRIES: Final = (
     Column("timeInterval.duration", "Seconds"),
     Column("billable", "Billable"),
 )
+
+TIME_OFF_POLICIES: Final = (
+    Column("id", "ID"),
+    Column("name", "Name"),
+    Column("timeUnit", "Unit"),
+    Column("archived", "Archived"),
+    Column("allowHalfDay", "Half days"),
+    Column("approve.requiresApproval", "Needs approval"),
+)
+
+TIME_OFF_REQUESTS: Final = (
+    Column("id", "ID"),
+    Column("userName", "User"),
+    Column("policyName", "Policy"),
+    Column("status.statusType", "Status"),
+    Column("timeOffPeriod.period.start", "Start"),
+    Column("timeOffPeriod.period.end", "End"),
+    Column("balanceDiff", "Balance change"),
+)
+
+TIME_OFF_REQUEST_RESULT: Final = (
+    Column("id", "ID"),
+    Column("userId", "User"),
+    Column("policyId", "Policy"),
+    Column("status.statusType", "Status"),
+    Column("timeOffPeriod.period.start", "Start"),
+    Column("timeOffPeriod.period.end", "End"),
+    Column("balanceDiff", "Balance change"),
+)
+
+TIME_OFF_BALANCES: Final = (
+    Column("userName", "User"),
+    Column("policyName", "Policy"),
+    Column("balance", "Balance"),
+    Column("used", "Used"),
+    Column("total", "Total"),
+)
+
+TIME_OFF_ASSIGNMENTS: Final = (
+    Column("id", "ID"),
+    Column("userId", "User"),
+    Column("policyId", "Policy"),
+    Column("balance", "Balance"),
+    Column("accrued", "Accrued"),
+    Column("dateRange.start", "Start"),
+    Column("dateRange.end", "End"),
+)
+
+APPROVALS: Final = (
+    Column("approvalRequest.id", "ID"),
+    Column("approvalRequest.type", "Type"),
+    Column("approvalRequest.status.state", "State"),
+    Column("approvalRequest.owner.userName", "Owner"),
+    Column("approvalRequest.dateRange.start", "Start"),
+    Column("approvalRequest.dateRange.end", "End"),
+    Column("trackedTime", "Tracked"),
+    Column("pendingTime", "Pending"),
+)
+
+APPROVAL_REQUESTS: Final = (
+    Column("id", "ID"),
+    Column("type", "Type"),
+    Column("status.state", "State"),
+    Column("owner.userName", "Owner"),
+    Column("dateRange.start", "Start"),
+    Column("dateRange.end", "End"),
+)

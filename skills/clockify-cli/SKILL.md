@@ -3,8 +3,9 @@ name: clockify-cli
 description: >-
   Operate the clockify CLI beyond the timer: authentication and profiles,
   workspaces and users, managing projects, tasks, tags, clients, user
-  groups, custom fields and webhooks, and reporting tracked time. Use when the user says "clockify login", "switch
-  workspace", "create a project", "list tags", "add a client", "time report", or asks how to
+  groups, custom fields and webhooks, reporting tracked time, and time off
+  and approvals. Use when the user says "clockify login", "switch
+  workspace", "create a project", "list tags", "add a client", "time report", "request time off", "approve a timesheet", or asks how to
   use the clockify command.
 license: MIT
 compatibility: Requires the clockify CLI (clockify-unofficial-cli, Python 3.14+) and a configured Clockify API key
@@ -67,6 +68,12 @@ editing time entries, use the `clockify-time-tracking` skill.
    plus `-P`, `--client`, `--tag` and `--user` filters. Rows go to stdout, the
    totals line to stderr. `clockify shared-report generate REPORT` opens a
    shared report.
+
+   Time off: `clockify time-off policy|request|balance ...` and approvals:
+   `clockify approval list|submit|resubmit|approve|reject|withdraw`. Balance
+   changes (`balance update --value`, `update-assignment --change`) are deltas
+   and are not retried, so never repeat one blindly. These need a Standard
+   plan; exit code 5 means the plan or role does not allow it.
 
    Read with `list`/`get` first to confirm the target before `update` or
    `delete`.

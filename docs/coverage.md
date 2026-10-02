@@ -161,26 +161,26 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Time off
 
-| Endpoint                                                                                                             | SDK method | CLI command                                                   | Phase | Status  |
-| -------------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/time-off/policies`                                                                    |            | `clockify time-off policy list`                               | 4     | planned |
-| `GET /workspaces/{workspaceId}/time-off/policies/{id}`                                                               |            | `clockify time-off policy get POLICY`                         | 4     | planned |
-| `POST /workspaces/{workspaceId}/time-off/policies`                                                                   |            | `clockify time-off policy create NAME`                        | 4     | planned |
-| `PUT /workspaces/{workspaceId}/time-off/policies/{id}`                                                               |            | `clockify time-off policy update POLICY`                      | 4     | planned |
-| `PATCH /workspaces/{workspaceId}/time-off/policies/{id}`                                                             |            | `clockify time-off policy archive/restore POLICY`             | 4     | planned |
-| `DELETE /workspaces/{workspaceId}/time-off/policies/{id}`                                                            |            | `clockify time-off policy delete POLICY`                      | 4     | planned |
-| `POST /workspaces/{workspaceId}/time-off/requests`                                                                   |            | `clockify time-off request list`                              | 4     | planned |
-| `POST /workspaces/{workspaceId}/time-off/policies/{policyId}/requests`                                               |            | `clockify time-off request create -P POLICY`                  | 4     | planned |
-| `POST /workspaces/{workspaceId}/time-off/policies/{policyId}/users/{userId}/requests`                                |            | `clockify time-off request create -P POLICY --user USER`      | 4     | planned |
-| `PATCH /workspaces/{workspaceId}/time-off/policies/{policyId}/requests/{requestId}`                                  |            | `clockify time-off request approve/reject REQUEST`            | 4     | planned |
-| `DELETE /workspaces/{workspaceId}/time-off/policies/{policyId}/requests/{requestId}`                                 |            | `clockify time-off request delete REQUEST`                    | 4     | planned |
-| `GET /workspaces/{workspaceId}/time-off/balance/policy/{policyId}`                                                   |            | `clockify time-off balance list -P POLICY`                    | 4     | planned |
-| `GET /workspaces/{workspaceId}/time-off/balance/user/{userId}`                                                       |            | `clockify time-off balance list --user USER`                  | 4     | planned |
-| `PATCH /workspaces/{workspaceId}/time-off/balance/policy/{policyId}`                                                 |            | `clockify time-off balance update -P POLICY`                  | 4     | planned |
-| `POST /workspaces/{workspaceId}/time-off/balance/assignment`                                                         |            | `clockify time-off balance assign`                            | 4     | planned |
-| `GET /workspaces/{workspaceId}/time-off/balance/assignment/user/{userId}/policy/{policyId}`                          |            | `clockify time-off balance assignments -P POLICY --user USER` | 4     | planned |
-| `PUT /workspaces/{workspaceId}/time-off/balance/assignment/{balanceAssignmentId}/user/{userId}/policy/{policyId}`    |            | `clockify time-off balance update-assignment ASSIGNMENT`      | 4     | planned |
-| `DELETE /workspaces/{workspaceId}/time-off/balance/assignment/{balanceAssignmentId}/user/{userId}/policy/{policyId}` |            | `clockify time-off balance delete-assignment ASSIGNMENT`      | 4     | planned |
+| Endpoint                                                                                                             | SDK method                                                                | CLI command                                                          | Phase | Status |
+| -------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/time-off/policies`                                                                    | `ws.time_off_policies.list(policy_filter=)`                               | `clockify time-off policy list`                                      | 4     | done   |
+| `GET /workspaces/{workspaceId}/time-off/policies/{id}`                                                               | `ws.time_off_policies.get(id)`                                            | `clockify time-off policy get POLICY`                                | 4     | done   |
+| `POST /workspaces/{workspaceId}/time-off/policies`                                                                   | `ws.time_off_policies.create(payload)`                                    | `clockify time-off policy create --name NAME`                        | 4     | done   |
+| `PUT /workspaces/{workspaceId}/time-off/policies/{id}`                                                               | `ws.time_off_policies.update(id, payload)`                                | `clockify time-off policy update POLICY`                             | 4     | done   |
+| `PATCH /workspaces/{workspaceId}/time-off/policies/{id}`                                                             | `ws.time_off_policies.update_status(id, payload)`                         | `clockify time-off policy archive/restore POLICY`                    | 4     | done   |
+| `DELETE /workspaces/{workspaceId}/time-off/policies/{id}`                                                            | `ws.time_off_policies.delete(id)`                                         | `clockify time-off policy delete POLICY`                             | 4     | done   |
+| `POST /workspaces/{workspaceId}/time-off/requests`                                                                   | `ws.time_off_requests.list(request_filter=)`                              | `clockify time-off request list`                                     | 4     | done   |
+| `POST /workspaces/{workspaceId}/time-off/policies/{policyId}/requests`                                               | `ws.time_off_requests.create(policy_id, payload)`                         | `clockify time-off request create -P POLICY --from DATE`             | 4     | done   |
+| `POST /workspaces/{workspaceId}/time-off/policies/{policyId}/users/{userId}/requests`                                | `ws.time_off_requests.create_for_user(policy_id, user_id, payload)`       | `clockify time-off request create -P POLICY --from DATE --user USER` | 4     | done   |
+| `PATCH /workspaces/{workspaceId}/time-off/policies/{policyId}/requests/{requestId}`                                  | `ws.time_off_requests.update_status(policy_id, request_id, payload)`      | `clockify time-off request approve/reject REQUEST`                   | 4     | done   |
+| `DELETE /workspaces/{workspaceId}/time-off/policies/{policyId}/requests/{requestId}`                                 | `ws.time_off_requests.delete(policy_id, request_id)`                      | `clockify time-off request delete REQUEST`                           | 4     | done   |
+| `GET /workspaces/{workspaceId}/time-off/balance/policy/{policyId}`                                                   | `ws.time_off_balances.list_for_policy(policy_id, balance_filter=)`        | `clockify time-off balance list -P POLICY`                           | 4     | done   |
+| `GET /workspaces/{workspaceId}/time-off/balance/user/{userId}`                                                       | `ws.time_off_balances.list_for_user(user_id, balance_filter=)`            | `clockify time-off balance list --user USER`                         | 4     | done   |
+| `PATCH /workspaces/{workspaceId}/time-off/balance/policy/{policyId}`                                                 | `ws.time_off_balances.update(policy_id, payload)`                         | `clockify time-off balance update -P POLICY --user USER --value N`   | 4     | done   |
+| `POST /workspaces/{workspaceId}/time-off/balance/assignment`                                                         | `ws.time_off_balances.create_assignment(payload)`                         | `clockify time-off balance assign`                                   | 4     | done   |
+| `GET /workspaces/{workspaceId}/time-off/balance/assignment/user/{userId}/policy/{policyId}`                          | `ws.time_off_balances.list_assignments(user_id, policy_id)`               | `clockify time-off balance assignments -P POLICY --user USER`        | 4     | done   |
+| `PUT /workspaces/{workspaceId}/time-off/balance/assignment/{balanceAssignmentId}/user/{userId}/policy/{policyId}`    | `ws.time_off_balances.update_assignment(id, user_id, policy_id, payload)` | `clockify time-off balance update-assignment ASSIGNMENT`             | 4     | done   |
+| `DELETE /workspaces/{workspaceId}/time-off/balance/assignment/{balanceAssignmentId}/user/{userId}/policy/{policyId}` | `ws.time_off_balances.delete_assignment(id, user_id, policy_id, payload)` | `clockify time-off balance delete-assignment ASSIGNMENT`             | 4     | done   |
 
 ## Holidays
 
@@ -194,14 +194,14 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Approvals
 
-| Endpoint                                                                                        | SDK method | CLI command                                         | Phase | Status  |
-| ----------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/approval-requests`                                               |            | `clockify approval list`                            | 4     | planned |
-| `POST /workspaces/{workspaceId}/approval-requests/{type}`                                       |            | `clockify approval submit --type`                   | 4     | planned |
-| `POST /workspaces/{workspaceId}/approval-requests/users/{userId}/{type}`                        |            | `clockify approval submit --type --user USER`       | 4     | planned |
-| `POST /workspaces/{workspaceId}/approval-requests/resubmit-entries-for-approval`                |            | `clockify approval resubmit`                        | 4     | planned |
-| `POST /workspaces/{workspaceId}/approval-requests/users/{userId}/resubmit-entries-for-approval` |            | `clockify approval resubmit --user USER`            | 4     | planned |
-| `PATCH /workspaces/{workspaceId}/approval-requests/{approvalRequestId}`                         |            | `clockify approval approve/reject/withdraw REQUEST` | 4     | planned |
+| Endpoint                                                                                        | SDK method                                             | CLI command                                         | Phase | Status  |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------- | ----- | ------- |
+| `GET /workspaces/{workspaceId}/approval-requests`                                               | `ws.approvals.list(request_filter=)`                   | `clockify approval list`                            | 4     | done    |
+| `POST /workspaces/{workspaceId}/approval-requests/{type}`                                       | `ws.approvals.submit(type, payload)`                   | `clockify approval submit --start DATE [--type]`    | 4     | done    |
+| `POST /workspaces/{workspaceId}/approval-requests/users/{userId}/{type}`                        | `ws.approvals.submit_for_user(user_id, type, payload)` | `clockify approval submit --start DATE --user USER` | 4     | done    |
+| `POST /workspaces/{workspaceId}/approval-requests/resubmit-entries-for-approval`                | `ws.approvals.resubmit(payload)`                       | `clockify approval resubmit --start DATE`           | 4     | done    |
+| `POST /workspaces/{workspaceId}/approval-requests/users/{userId}/resubmit-entries-for-approval` |                                                        | `clockify approval resubmit --user USER`            | 4     | planned |
+| `PATCH /workspaces/{workspaceId}/approval-requests/{approvalRequestId}`                         | `ws.approvals.update(id, payload)`                     | `clockify approval approve/reject/withdraw REQUEST` | 4     | done    |
 
 ## Expenses
 
