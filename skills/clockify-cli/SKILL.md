@@ -52,14 +52,15 @@ editing time entries, use the `clockify-time-tracking` skill.
    - `clockify user me|list`.
 4. Resource management, each with `clockify <group> <verb> --help`:
 
-   | Group          | Verbs                             | Notes                           |
-   | -------------- | --------------------------------- | ------------------------------- |
-   | `project`      | list, get, create, update, delete | `get` takes an ID or exact name |
-   | `task`         | list, get, create, update, delete | `list` requires `-P PROJECT`    |
-   | `tag`          | list, get, create, update, delete |                                 |
-   | `client`       | list, get, create, update, delete |                                 |
-   | `group`        | list, create, update, delete      | user groups                     |
-   | `custom-field` | list, create, update, delete      |                                 |
+   | Group          | Verbs                                                           | Notes                                                                      |
+   | -------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------- |
+   | `project`      | list, get, create, update, delete                               | `get` takes an ID or exact name                                            |
+   | `task`         | list, get, create, update, delete                               | `list` requires `-P PROJECT`                                               |
+   | `tag`          | list, get, create, update, delete                               |                                                                            |
+   | `client`       | list, get, create, update, delete                               |                                                                            |
+   | `group`        | list, create, update, delete, add-user, remove-user             | user groups                                                                |
+   | `webhook`      | list, get, create, update, delete, rotate-token, logs, statuses | `create` and `rotate-token` print the signing token; `list`/`get` never do |
+   | `custom-field` | list, create, update, delete                                    |                                                                            |
 
    Read with `list`/`get` first to confirm the target before `update` or
    `delete`.

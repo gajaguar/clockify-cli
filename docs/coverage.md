@@ -55,24 +55,24 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## User groups
 
-| Endpoint                                                                    | SDK method                           | CLI command                             | Phase | Status  |
-| --------------------------------------------------------------------------- | ------------------------------------ | --------------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/user-groups`                                 | `ws.user_groups.list()`              | `clockify group list`                   | 1     | done    |
-| `POST /workspaces/{workspaceId}/user-groups`                                | `ws.user_groups.create(payload)`     | `clockify group create NAME`            | 1     | done    |
-| `PUT /workspaces/{workspaceId}/user-groups/{id}`                            | `ws.user_groups.update(id, payload)` | `clockify group update GROUP`           | 1     | done    |
-| `DELETE /workspaces/{workspaceId}/user-groups/{id}`                         | `ws.user_groups.delete(id)`          | `clockify group delete GROUP`           | 1     | done    |
-| `POST /workspaces/{workspaceId}/user-groups/{userGroupId}/users`            |                                      | `clockify group add-user GROUP USER`    | 2     | planned |
-| `DELETE /workspaces/{workspaceId}/user-groups/{userGroupId}/users/{userId}` |                                      | `clockify group remove-user GROUP USER` | 2     | planned |
+| Endpoint                                                                    | SDK method                                | CLI command                             | Phase | Status |
+| --------------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/user-groups`                                 | `ws.user_groups.list()`                   | `clockify group list`                   | 1     | done   |
+| `POST /workspaces/{workspaceId}/user-groups`                                | `ws.user_groups.create(payload)`          | `clockify group create NAME`            | 1     | done   |
+| `PUT /workspaces/{workspaceId}/user-groups/{id}`                            | `ws.user_groups.update(id, payload)`      | `clockify group update GROUP`           | 1     | done   |
+| `DELETE /workspaces/{workspaceId}/user-groups/{id}`                         | `ws.user_groups.delete(id)`               | `clockify group delete GROUP`           | 1     | done   |
+| `POST /workspaces/{workspaceId}/user-groups/{userGroupId}/users`            | `ws.user_groups.add_user(group, user)`    | `clockify group add-user GROUP USER`    | 2     | done   |
+| `DELETE /workspaces/{workspaceId}/user-groups/{userGroupId}/users/{userId}` | `ws.user_groups.remove_user(group, user)` | `clockify group remove-user GROUP USER` | 2     | done   |
 
 ## Clients
 
-| Endpoint                                        | SDK method                       | CLI command                     | Phase | Status  |
-| ----------------------------------------------- | -------------------------------- | ------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/clients`         | `ws.clients.list()`              | `clockify client list`          | 1     | done    |
-| `GET /workspaces/{workspaceId}/clients/{id}`    | `ws.clients.get(id)`             | `clockify client get CLIENT`    | 1     | done    |
-| `POST /workspaces/{workspaceId}/clients`        | `ws.clients.create(payload)`     | `clockify client create NAME`   | 1     | done    |
-| `PUT /workspaces/{workspaceId}/clients/{id}`    | `ws.clients.update(id, payload)` | `clockify client update CLIENT` | 1     | done    |
-| `DELETE /workspaces/{workspaceId}/clients/{id}` | `ws.clients.delete(id)`          | `clockify client delete CLIENT` | 1     | done    |
+| Endpoint                                        | SDK method                       | CLI command                     | Phase | Status |
+| ----------------------------------------------- | -------------------------------- | ------------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/clients`         | `ws.clients.list()`              | `clockify client list`          | 1     | done   |
+| `GET /workspaces/{workspaceId}/clients/{id}`    | `ws.clients.get(id)`             | `clockify client get CLIENT`    | 1     | done   |
+| `POST /workspaces/{workspaceId}/clients`        | `ws.clients.create(payload)`     | `clockify client create NAME`   | 1     | done   |
+| `PUT /workspaces/{workspaceId}/clients/{id}`    | `ws.clients.update(id, payload)` | `clockify client update CLIENT` | 1     | done   |
+| `DELETE /workspaces/{workspaceId}/clients/{id}` | `ws.clients.delete(id)`          | `clockify client delete CLIENT` | 1     | done   |
 
 ## Projects
 
@@ -105,13 +105,13 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Tags
 
-| Endpoint                                     | SDK method                    | CLI command                | Phase | Status  |
-| -------------------------------------------- | ----------------------------- | -------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/tags`         | `ws.tags.list()`              | `clockify tag list`        | 1     | done    |
-| `GET /workspaces/{workspaceId}/tags/{id}`    | `ws.tags.get(id)`             | `clockify tag get TAG`     | 1     | done    |
-| `POST /workspaces/{workspaceId}/tags`        | `ws.tags.create(payload)`     | `clockify tag create NAME` | 1     | done    |
-| `PUT /workspaces/{workspaceId}/tags/{id}`    | `ws.tags.update(id, payload)` | `clockify tag update TAG`  | 1     | done    |
-| `DELETE /workspaces/{workspaceId}/tags/{id}` | `ws.tags.delete(id)`          | `clockify tag delete TAG`  | 1     | done    |
+| Endpoint                                     | SDK method                    | CLI command                | Phase | Status |
+| -------------------------------------------- | ----------------------------- | -------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/tags`         | `ws.tags.list()`              | `clockify tag list`        | 1     | done   |
+| `GET /workspaces/{workspaceId}/tags/{id}`    | `ws.tags.get(id)`             | `clockify tag get TAG`     | 1     | done   |
+| `POST /workspaces/{workspaceId}/tags`        | `ws.tags.create(payload)`     | `clockify tag create NAME` | 1     | done   |
+| `PUT /workspaces/{workspaceId}/tags/{id}`    | `ws.tags.update(id, payload)` | `clockify tag update TAG`  | 1     | done   |
+| `DELETE /workspaces/{workspaceId}/tags/{id}` | `ws.tags.delete(id)`          | `clockify tag delete TAG`  | 1     | done   |
 
 ## Custom fields
 
@@ -259,17 +259,17 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Webhooks
 
-| Endpoint                                                      | SDK method | CLI command                             | Phase | Status  |
-| ------------------------------------------------------------- | ---------- | --------------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/webhooks`                      |            | `clockify webhook list`                 | 6     | planned |
-| `GET /workspaces/{workspaceId}/addons/{addonId}/webhooks`     |            | `clockify webhook list --addon ADDON`   | 6     | planned |
-| `GET /workspaces/{workspaceId}/webhooks/{webhookId}`          |            | `clockify webhook get WEBHOOK`          | 6     | planned |
-| `POST /workspaces/{workspaceId}/webhooks`                     |            | `clockify webhook create URL --event`   | 6     | planned |
-| `PUT /workspaces/{workspaceId}/webhooks/{webhookId}`          |            | `clockify webhook update WEBHOOK`       | 6     | planned |
-| `DELETE /workspaces/{workspaceId}/webhooks/{webhookId}`       |            | `clockify webhook delete WEBHOOK`       | 6     | planned |
-| `PATCH /workspaces/{workspaceId}/webhooks/{webhookId}/token`  |            | `clockify webhook rotate-token WEBHOOK` | 6     | planned |
-| `POST /workspaces/{workspaceId}/webhooks/{webhookId}/logs`    |            | `clockify webhook logs WEBHOOK`         | 6     | planned |
-| `GET /workspaces/{workspaceId}/webhooks/{webhookId}/statuses` |            | `clockify webhook statuses WEBHOOK`     | 6     | planned |
+| Endpoint                                                      | SDK method                          | CLI command                                       | Phase | Status |
+| ------------------------------------------------------------- | ----------------------------------- | ------------------------------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/webhooks`                      | `ws.webhooks.list()`                | `clockify webhook list`                           | 6     | done   |
+| `GET /workspaces/{workspaceId}/addons/{addonId}/webhooks`     | `ws.webhooks.list_for_addon(id)`    | `clockify webhook list --addon ADDON`             | 6     | done   |
+| `GET /workspaces/{workspaceId}/webhooks/{webhookId}`          | `ws.webhooks.get(id)`               | `clockify webhook get WEBHOOK`                    | 6     | done   |
+| `POST /workspaces/{workspaceId}/webhooks`                     | `ws.webhooks.create(payload)`       | `clockify webhook create --url URL --event EVENT` | 6     | done   |
+| `PUT /workspaces/{workspaceId}/webhooks/{webhookId}`          | `ws.webhooks.update(id, payload)`   | `clockify webhook update WEBHOOK`                 | 6     | done   |
+| `DELETE /workspaces/{workspaceId}/webhooks/{webhookId}`       | `ws.webhooks.delete(id)`            | `clockify webhook delete WEBHOOK`                 | 6     | done   |
+| `PATCH /workspaces/{workspaceId}/webhooks/{webhookId}/token`  | `ws.webhooks.regenerate_token(id)`  | `clockify webhook rotate-token WEBHOOK`           | 6     | done   |
+| `POST /workspaces/{workspaceId}/webhooks/{webhookId}/logs`    | `ws.webhooks.logs(id, search=)`     | `clockify webhook logs WEBHOOK`                   | 6     | done   |
+| `GET /workspaces/{workspaceId}/webhooks/{webhookId}/statuses` | `ws.webhooks.statuses(id, status=)` | `clockify webhook statuses WEBHOOK`               | 6     | done   |
 
 ## Entity changes (experimental)
 

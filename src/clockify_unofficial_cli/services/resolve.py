@@ -96,6 +96,12 @@ def resolve_group(app_context: AppContext, term: str) -> str:
     return resolve(term, candidates, noun="group")
 
 
+def resolve_webhook(app_context: AppContext, term: str) -> str:
+    workspace = app_context.workspace()
+    candidates = _candidate_ids_from(workspace.webhooks.list(), name=lambda item: item.name or item.url)
+    return resolve(term, candidates, noun="webhook")
+
+
 def resolve_task(app_context: AppContext, project_id: ProjectId, term: str) -> str:
     workspace = app_context.workspace()
     candidates = _candidate_ids_from(workspace.tasks.list(project_id), name=lambda item: item.name)
@@ -125,4 +131,5 @@ __all__ = [
     "resolve_tag",
     "resolve_task",
     "resolve_user",
+    "resolve_webhook",
 ]

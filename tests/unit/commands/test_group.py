@@ -88,3 +88,54 @@ def test_group_delete_sends_yes_skip(runner: CliRunner, cli: typer.Typer, enviro
     # Assert
     assert result.exit_code == ExitCode.OK
     assert route.called
+
+
+@respx.mock
+def test_group_add_user_posts_user_id(runner: CliRunner, cli: typer.Typer, environ: dict[str, str]) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    workspace = USER_PAYLOAD["activeWorkspace"]
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    respx.get(_group_path(workspace)).mock(return_value=Response(200, json=[GROUP_PAYLOAD]))
+    respx.get(f"{BASE_URL}/workspaces/{workspace}/users").mock(return_value=Response(200, json=[USER_PAYLOAD]))
+    route = respx.post(f"{_group_path(workspace)}/{GROUP_PAYLOAD['id']}/users").mock(
+        return_value=Response(200, json=GROUP_PAYLOAD)
+    )
+    # Act
+    result = runner.invoke(cli, ["-o", "json", "group", "add-user", "Engineering", USER_PAYLOAD["id"]])
+    # Assert
+    assert result.exit_code == ExitCode.OK
+    assert json.loads(route.calls.last.request.content) == {"userId": USER_PAYLOAD["id"]}
+    assert json.loads(result.stdout) == GROUP_PAYLOAD
+
+
+@respx.mock
+def test_group_remove_user_deletes_membership(runner: CliRunner, cli: typer.Typer, environ: dict[str, str]) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    workspace = USER_PAYLOAD["activeWorkspace"]
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    respx.get(_group_path(workspace)).mock(return_value=Response(200, json=[GROUP_PAYLOAD]))
+    respx.get(f"{BASE_URL}/workspaces/{workspace}/users").mock(return_value=Response(200, json=[USER_PAYLOAD]))
+    route = respx.delete(f"{_group_path(workspace)}/{GROUP_PAYLOAD['id']}/users/{USER_PAYLOAD['id']}").mock(
+        return_value=Response(200, json=GROUP_PAYLOAD)
+    )
+    # Act
+    result = runner.invoke(cli, ["-o", "json", "group", "remove-user", "Engineering", USER_PAYLOAD["id"]])
+    # Assert
+    assert result.exit_code == ExitCode.OK
+    assert route.called
+
+
+@respx.mock
+def test_group_add_user_unknown_group_is_not_found(
+    runner: CliRunner, cli: typer.Typer, environ: dict[str, str]
+) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    respx.get(_group_path(USER_PAYLOAD["activeWorkspace"])).mock(return_value=Response(200, json=[GROUP_PAYLOAD]))
+    # Act
+    result = runner.invoke(cli, ["group", "add-user", "Nope", USER_PAYLOAD["id"]])
+    # Assert
+    assert result.exit_code == ExitCode.NOT_FOUND
