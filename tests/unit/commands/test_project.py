@@ -127,3 +127,24 @@ def test_project_delete_sends_yes_skip(runner: CliRunner, cli: typer.Typer, envi
     # Assert
     assert result.exit_code == ExitCode.OK
     assert route.called
+
+
+@respx.mock
+def test_project_list_and_get_accept_object_shaped_estimate(
+    runner: CliRunner, cli: typer.Typer, environ: dict[str, str]
+) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    payload = {**PROJECT_PAYLOAD, "estimate": {"estimate": "PT0S", "type": "AUTO"}}
+    workspace_id = USER_PAYLOAD["activeWorkspace"]
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    respx.get(_project_path(workspace_id)).mock(return_value=Response(200, json=[payload]))
+    respx.get(f"{_project_path(workspace_id)}/{PROJECT_PAYLOAD['id']}").mock(return_value=Response(200, json=payload))
+    # Act
+    listed = runner.invoke(cli, ["-o", "json", "project", "list"])
+    fetched = runner.invoke(cli, ["-o", "json", "project", "get", str(PROJECT_PAYLOAD["id"])])
+    # Assert
+    assert listed.exit_code == ExitCode.OK
+    assert json.loads(listed.stdout)[0]["estimate"] == "PT0S"
+    assert fetched.exit_code == ExitCode.OK
+    assert json.loads(fetched.stdout)["name"] == "Internal"

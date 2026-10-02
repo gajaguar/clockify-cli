@@ -107,6 +107,30 @@ def test_start_shortcut_sends_payload(runner: CliRunner, cli: typer.Typer, envir
 
 
 @respx.mock
+def test_start_with_project_id_accepts_object_shaped_estimate(
+    runner: CliRunner, cli: typer.Typer, environ: dict[str, str]
+) -> None:
+    # Arrange
+    environ["CLOCKIFY_API_KEY"] = "secret"
+    project = {
+        "id": "111111111111111111111111",
+        "name": "Internal",
+        "workspaceId": USER_PAYLOAD["activeWorkspace"],
+        "estimate": {"estimate": "PT0S", "type": "AUTO"},
+    }
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    respx.get(f"{BASE_URL}/workspaces/{USER_PAYLOAD['activeWorkspace']}/projects").mock(
+        return_value=Response(200, json=[project])
+    )
+    route = respx.post(TIME_ENTRIES_PATH).mock(return_value=Response(201, json=ENTRY_PAYLOAD))
+    # Act
+    result = runner.invoke(cli, ["-o", "json", "start", "spike", "-P", project["id"]])
+    # Assert
+    assert result.exit_code == ExitCode.OK
+    assert route.called
+
+
+@respx.mock
 def test_stop_shortcut_sends_payload(runner: CliRunner, cli: typer.Typer, environ: dict[str, str]) -> None:
     # Arrange
     environ["CLOCKIFY_API_KEY"] = "secret"

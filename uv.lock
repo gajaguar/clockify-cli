@@ -174,7 +174,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clockify-unofficial-sdk", specifier = ">=1.10,<2" },
+    { name = "clockify-unofficial-sdk", specifier = ">=1.10.1,<2" },
     { name = "keyring", specifier = ">=25.0" },
     { name = "platformdirs", specifier = ">=4.0" },
     { name = "pydantic", specifier = ">=2.9" },
@@ -199,15 +199,15 @@ dev = [
 
 [[package]]
 name = "clockify-unofficial-sdk"
-version = "1.10.0"
+version = "1.10.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bd/1f/40792795a95316cb85adddda7c59e50e548735b85c9bd866aaddfcc58943/clockify_unofficial_sdk-1.10.0.tar.gz", hash = "sha256:0058e5535d183b6198436b73c95d6eee1a66ffef71a8c0c96f5897abeaebade2", size = 177344, upload-time = "2026-10-02T02:07:22.076Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e6/50/403f81bfe2d9876819797f9deec35e9c3c4fcd3e82535d97a54400175120/clockify_unofficial_sdk-1.10.1.tar.gz", hash = "sha256:94825e9b6e9fb05e7592d9b6b47259dabc9bdc7956ce15e9b8c6ab61cff42157", size = 177822, upload-time = "2026-10-02T15:07:52.71Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b0/c5/a6d23bd197b761c451587734ce3d0aa6188c8cb07eb085dc90cb4324a1c3/clockify_unofficial_sdk-1.10.0-py3-none-any.whl", hash = "sha256:40c82475b6f351fd2b6d57e16d881e62fa4c92f049555156f44b01f62dbf5aac", size = 68548, upload-time = "2026-10-02T02:07:20.808Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/e9/7a4db3137f1f91b59bcf17621a78b226a44c72e168ae81217e08a25b6a1d/clockify_unofficial_sdk-1.10.1-py3-none-any.whl", hash = "sha256:89f90fc80dd4b3b41bd75bbb4998d91333029f1ce74dbe08e2007723aa45c023", size = 68900, upload-time = "2026-10-02T15:07:51.44Z" },
 ]
 
 [[package]]
