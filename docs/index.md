@@ -21,7 +21,8 @@ See [`log.md`](log.md) for the bundle's change history.
 
 * [Architecture](ARCHITECTURE.md) - the technical specification: stack,
   layering, design patterns, authentication and how to add a command.
-* [Roadmap](ROADMAP.md) - the phased delivery plan.
+* [Roadmap](ROADMAP.md) - how the CLI reached 1.0.0, what it freezes, and what
+  waits for the SDK.
 * [Endpoint coverage](coverage.md) - each Clockify operation mapped to its
   SDK method and CLI command.
 

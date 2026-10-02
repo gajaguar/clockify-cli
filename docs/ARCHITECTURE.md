@@ -10,7 +10,7 @@ status: stable
 
 This document is the technical specification for `clockify-cli`: what it is,
 which stack and design patterns it uses and why, how authentication works,
-and how to extend it. The phased delivery plan lives in
+and how to extend it. The release history and what comes next live in
 [`ROADMAP.md`](ROADMAP.md); the per-endpoint status lives in
 [`coverage.md`](coverage.md).
 
@@ -26,6 +26,7 @@ and how to extend it. The phased delivery plan lives in
 - [Configuration](#configuration)
 - [Errors and exit codes](#errors-and-exit-codes)
 - [Testing strategy](#testing-strategy)
+- [Stability](#stability)
 - [Adding a command](#adding-a-command)
 - [Security considerations](#security-considerations)
 - [Open items](#open-items)
@@ -41,9 +42,9 @@ stable exit codes.
 
 Goals:
 
-- Expose **every non-deprecated Clockify API operation** (166 at the time of
-  writing) as a typed CLI command — tracked row by row in
-  [`coverage.md`](coverage.md).
+- Expose **every non-deprecated Clockify API operation that the SDK offers**
+  as a typed CLI command: 105 of the 166 at `1.0.0`, tracked row by row in
+  [`coverage.md`](coverage.md). The rest wait for the SDK.
 - Be pleasant interactively (tables, prompts, names instead of IDs) **and**
   predictable in scripts (JSON/CSV/ID output, stderr for diagnostics, stable
   exit codes).
@@ -214,7 +215,7 @@ clockify-cli/
 ├── Makefile, mk/*.mk         # check/fix/test surface; mk/clockify.mk
 ├── docs/
 │   ├── ARCHITECTURE.md       # this document
-│   ├── ROADMAP.md            # phases to 100% endpoint coverage
+│   ├── ROADMAP.md            # releases to 1.0.0 and what comes next
 │   └── coverage.md           # endpoint → SDK method → CLI command
 ├── scripts/
 │   └── coverage_report.py    # checks coverage.md against openapi.json
@@ -242,32 +243,32 @@ clockify-cli/
 │   │   ├── formats.py        # table/json/jsonl/csv/id renderers
 │   │   ├── registry.py       # OutputFormat → renderer factory
 │   │   └── columns.py        # per-resource column specs
-│   ├── services/             # Phase 1+: resolve, timer, parsing
-│   └── commands/
-│       ├── auth.py           # login/status/logout/token
-│       └── config.py         # path/list/use
+│   ├── services/             # resolve, parsing, listing, timer, reports, time_off,
+│   │                         # expenses, invoices, files, money
+│   └── commands/             # one module per Clockify area (auth, project, entry,
+│                             # report, time_off, expense, invoice, webhook, ...)
 └── tests/
     ├── conftest.py           # in-memory keyring, fake client, runner
     ├── unit/                 # mirrors src/ layout, offline
     └── live/                 # -m live, needs CLOCKIFY_TEST_API_KEY
 ```
 
-Planned additions follow the same shape:
+New areas follow the same shape: one `commands/<domain>.py` per row group in
+[`coverage.md`](coverage.md), with its logic in `services/`. Notable services:
 
-- `commands/<domain>.py` per row group in [`coverage.md`](coverage.md), for
-  example `project.py`, `entry.py`, `report.py`, `time_off.py`;
-- `services/resolve.py` (name-or-ID lookup);
-- `services/timer.py` (start/stop/continue);
-- `services/parsing.py` (durations like `1h30m` and relative dates like
-  `yesterday 09:00`).
+- `services/resolve.py` resolves a name or ID for every resource;
+- `services/parsing.py` reads durations like `1h30m` and instants like
+  `yesterday 09:00`;
+- `services/files.py` writes binary downloads (receipts, exported invoices);
+- `services/money.py` converts typed amounts to Clockify's minor units.
 
 ## Command surface
 
 - **Grammar.** `clockify [GLOBAL OPTIONS] <noun> <verb> [ARGS]`. The standard
   verbs are `list`, `get`, `create`, `update` and `delete`; domain verbs such
   as `archive`, `approve` or `export` are added where the API has them.
-  Time tracking also gets root shortcuts: `start`, `stop`, `status`, `log`
-  and `continue`.
+  Time tracking also gets root shortcuts: `start`, `stop`, `status` and
+  `log`.
 - **Global options** must come before the noun:
 
   | Option                 | Env var              | Default                                                      |
@@ -278,7 +279,7 @@ Planned additions follow the same shape:
   | `--version`            |                      |                                                              |
   | `--install-completion` |                      | Added by Typer                                               |
 
-- **Names or IDs.** From Phase 1, arguments such as `PROJECT` or `TAG`
+- **Names or IDs.** Arguments such as `PROJECT` or `TAG`
   accept either an ID or an exact, case-insensitive name. An ambiguous name
   is a usage error that lists the candidates.
 - **Output contract.**
@@ -286,7 +287,11 @@ Planned additions follow the same shape:
     to stderr.
   - `json` keeps Clockify's camelCase field names so it matches the API docs.
   - `id` prints one identifier per line for `xargs`.
-- **Destructive commands** (`delete`, bulk operations), from Phase 1: ask
+  - A command that downloads a file (`expense receipt`, `invoice export`)
+    writes the bytes to `--save PATH`, or to a pipe with `--save -`, and never
+    through `-o`.
+  - Report commands print a totals line to stderr, so stdout holds only rows.
+- **Destructive commands** (`delete`, bulk operations): ask
   for confirmation on a TTY and require `--yes` otherwise.
 
 ## Configuration
@@ -353,6 +358,24 @@ by `hint: <next step>`.
   - `make coverage-report`: keeps `coverage.md` in sync with the upstream
     spec.
 
+## Stability
+
+From `1.0.0` the following are a public contract, and a breaking change to
+any of them needs a major version:
+
+- the exit codes in [Errors and exit codes](#errors-and-exit-codes);
+- the field names and types of `-o json` and `-o jsonl`, which keep Clockify's
+  camelCase names (adding a field is not breaking);
+- what goes to stdout (rendered data) and what goes to stderr (prompts, totals,
+  progress and errors);
+- the `clockify <noun> <verb>` grammar, the commands and options listed as
+  `done` in [`coverage.md`](coverage.md), the global options, the environment
+  variables and the keys of `config.toml`.
+
+Table layout and column headers, the wording of messages and `--help`, and the
+order of rows Clockify does not sort are not part of the contract. See
+[`ROADMAP.md`](ROADMAP.md#what-100-freezes) for how new operations arrive.
+
 ## Adding a command
 
 1. Confirm the SDK exposes the endpoint (check the SDK's `docs/coverage.md`).
@@ -394,5 +417,7 @@ by `hint: <next step>`.
 - Clockify's per-plan rate limits aren't documented upstream. The CLI relies
   on the SDK's retry policy and exits with code 8 once retries are
   exhausted.
-- Several endpoints in Phases 4–6 (time off, invoices, scheduling) need paid
-  plans, so live verification depends on access to such a workspace.
+- Time off, approvals, expenses and invoices need paid plans. Their commands
+  are tested against mocked responses built from the OpenAPI schemas, and have
+  not been run against a real paid workspace.
+- Report totals are not part of `-o json`, because they go to stderr.

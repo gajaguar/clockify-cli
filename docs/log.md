@@ -1,5 +1,13 @@
 # Directory Update Log
 
+## 2026-10-06
+
+* **Update**: Rewrote `ROADMAP.md` around the releases that led to `1.0.0`, what
+  `1.0.0` freezes, and the 61 operations that wait for the SDK.
+* **Update**: Replaced the Phase column of `coverage.md` with the release that
+  added each command, and added a Stability section to `ARCHITECTURE.md`.
+* **Update**: Brought `README.md` in line with the full command surface.
+
 ## 2026-10-05
 
 * **Addition**: Added `commands/invoices.md`, which explains invoice amounts,

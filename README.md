@@ -40,8 +40,9 @@ handles profiles, credential storage, name-to-ID resolution, output formatting,
 and stable exit codes. The SDK owns HTTP, retries, pagination, typed models,
 and API error mapping.
 
-The CLI is being delivered in phases. The authoritative endpoint mapping is in
-[`docs/coverage.md`](docs/coverage.md), and the delivery plan is in
+`1.0.0` covers every Clockify operation that the SDK offers: 105 of the 166
+non-deprecated operations. The authoritative endpoint mapping is in
+[`docs/coverage.md`](docs/coverage.md), and what comes next is in
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Key features
@@ -55,6 +56,8 @@ The CLI is being delivered in phases. The authoritative endpoint mapping is in
 - **Stable automation contract** - Keep data on stdout, diagnostics on stderr,
   and use documented exit codes.
 - **CI support** - Use `CLOCKIFY_API_KEY` without writing a credential to disk.
+- **Broad coverage** - Manage time entries, projects, reports, time off,
+  approvals, expenses, invoices and webhooks from the terminal.
 - **Typed API foundation** - Build on the SDK's typed models, retries, and
   pagination instead of making HTTP requests in the CLI.
 
@@ -133,7 +136,8 @@ npx skills add gajaguar/clockify-cli -a opencode -y
 
 - `clockify-time-tracking` covers `start`, `stop`, `status`, `log` and `entry`.
 - `clockify-cli` covers authentication, profiles, workspaces and the
-  project, task, tag, client, group and custom-field commands.
+  project, task, tag, client, group, custom-field, webhook, report, time-off,
+  approval, expense and invoice commands.
 
 The skills follow the [Agent Skills](https://agentskills.io/specification)
 format, so other agents can read `skills/` directly. They require the CLI to
@@ -172,12 +176,19 @@ printf '%s' "$KEY" | clockify -p work auth login --with-token --region EU_CENTRA
 
 - `start`, `stop`, `status` and `log` track time.
 - `workspace`, `user`, `client`, `project`, `task`, `tag`, `group`,
-  `custom-field` and `entry` manage resources; run `clockify COMMAND --help`
-  for their verbs.
+  `custom-field`, `entry` and `webhook` manage resources.
+- `report` and `shared-report` summarize tracked time.
+- `time-off` and `approval` handle leave and timesheet approvals.
+- `expense` and `invoice` handle expenses, receipts, invoices and payments.
 
-Remaining resource commands arrive in phases. See the
-[roadmap](docs/ROADMAP.md) and [coverage matrix](docs/coverage.md) for their
-status.
+Run `clockify COMMAND --help` for the verbs of each group. Clockify operations
+that the SDK does not offer yet are listed as `planned` in the
+[coverage matrix](docs/coverage.md) and in the [roadmap](docs/ROADMAP.md).
+
+Commands that download a file (`expense receipt`, `invoice export`) write it to
+`--save PATH`, or to a pipe with `--save -`, and never through `-o`. Amounts are
+typed in major units (`120.50`) and shown in Clockify's minor units. Time off,
+approvals, expenses and invoices need a paid Clockify plan.
 
 ### Global options
 
@@ -252,22 +263,23 @@ Live tests are excluded from `make test`. They require
 
 ## Roadmap
 
-- [x] Phase 0: foundation, authentication, profiles, renderers, and exit codes
-- [x] Phase 1: workspace, user, project, task, tag, group, and entry commands
-- [ ] Phase 2: core API completion
-- [ ] Phase 3: reports
-- [ ] Phase 4: time off, holidays, and approvals
-- [ ] Phase 5: expenses and invoices
-- [ ] Phase 6: scheduling, webhooks, and entity changes
-- [ ] Phase 7: release hardening for `1.0.0`
+- [x] `0.2.0`: foundation, workspaces, users, projects, tasks, tags, entries
+- [x] `0.3.0`: group membership and webhooks
+- [x] `0.4.0`: reports
+- [x] `0.5.0`: time off and approvals
+- [x] `0.6.0`: expenses and receipts
+- [x] `0.7.0`: invoices
+- [x] `1.0.0`: exit codes, JSON output and command grammar are a stable contract
+- [ ] `1.x`: the 61 operations the SDK does not offer yet, as it adds them
 
-See [`docs/ROADMAP.md`](docs/ROADMAP.md) for operation counts, dependencies,
-and completion criteria.
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for operation counts and what is
+frozen from `1.0.0`.
 
 ## Open items
 
 - Only the `GLOBAL` region host is verified against a live account.
-- Plan-gated endpoints need a paid workspace for live verification.
+- Time off, approvals, expenses and invoices are tested against mocked
+  responses; they have not been run against a paid workspace.
 - Clockify's per-plan rate limits are not fully documented upstream.
 
 ## Contributing
