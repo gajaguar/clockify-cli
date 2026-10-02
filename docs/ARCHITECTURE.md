@@ -348,7 +348,7 @@ by `hint: <next step>`.
   `CLOCKIFY_TEST_API_KEY` is set. The default run excludes them.
 - **Gates.**
   - `make check`: ruff `ALL`, mypy strict, Pyright, pylint with
-    `pylint-plugin`, markdownlint and cspell.
+    `pylint-gajaguar`, markdownlint and cspell.
   - `make test`: 90% coverage floor.
   - `make coverage-report`: keeps `coverage.md` in sync with the upstream
     spec.

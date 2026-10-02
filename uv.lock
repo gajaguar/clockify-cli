@@ -174,7 +174,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "clockify-unofficial-sdk", git = "https://github.com/gajaguar/clockify-sdk?tag=v1.0.1" },
+    { name = "clockify-unofficial-sdk", git = "https://github.com/gajaguar/clockify-sdk?tag=v1.6.0" },
     { name = "keyring", specifier = ">=25.0" },
     { name = "platformdirs", specifier = ">=4.0" },
     { name = "pydantic", specifier = ">=2.9" },
@@ -185,10 +185,10 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "conventional-git", specifier = ">=1.1" },
+    { name = "conventional-git", specifier = ">=1.3" },
     { name = "mypy", specifier = ">=2.3.1" },
     { name = "pylint", specifier = ">=4.0.9" },
-    { name = "pylint-gajaguar", specifier = ">=2.0" },
+    { name = "pylint-gajaguar", specifier = ">=2.0.1" },
     { name = "pyright", specifier = ">=1.1.414" },
     { name = "pytest", specifier = ">=9.1" },
     { name = "pytest-cov", specifier = ">=7.1" },
@@ -199,8 +199,8 @@ dev = [
 
 [[package]]
 name = "clockify-unofficial-sdk"
-version = "1.0.1"
-source = { git = "https://github.com/gajaguar/clockify-sdk?tag=v1.0.1#0dd31dfdd1e4a59a8df62b153f9a142752291f69" }
+version = "1.6.0"
+source = { git = "https://github.com/gajaguar/clockify-sdk?tag=v1.6.0#9d63cb3a6711e0ebee590b3aa6a7200a4903336b" }
 dependencies = [
     { name = "httpx" },
     { name = "pydantic" },
@@ -217,14 +217,14 @@ wheels = [
 
 [[package]]
 name = "conventional-git"
-version = "1.2.0"
+version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/43/5b/4079df321de64a9c231f54282d5affde251a05fa2e721104164c3f4da647/conventional_git-1.2.0.tar.gz", hash = "sha256:37fc4242c02cb85855a9500ef7045e4e5e0e5a764f5949094df3282b58d037f5", size = 147288, upload-time = "2026-09-29T05:03:53.327Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/22/6c/732c5646fbaf04cd7f44a1d90287dd12ccf6e5ad4c43136bf6c7e5161c4b/conventional_git-1.3.0.tar.gz", hash = "sha256:286ab60c48ebffa5be800cf0162ebb4e87dc3a8c1b83c7ae49a3406e5ab3f07d", size = 159848, upload-time = "2026-10-01T03:02:31.012Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/2a/49b27dc061aaf47c4cd73271d81ecae79bfa1a6be93f8e1df7fdb57d356c/conventional_git-1.2.0-py3-none-any.whl", hash = "sha256:68d266eba75f2577bbd8f4ebfd366fc5e182b607afd9f2e9cba347c241f10793", size = 40693, upload-time = "2026-09-29T05:03:51.777Z" },
+    { url = "https://files.pythonhosted.org/packages/41/78/c8e0d5d214c9bcfb250a55e2ebe9ea39bb8ff8d017a4e148a2669834fec9/conventional_git-1.3.0-py3-none-any.whl", hash = "sha256:ca85e8d7c307256480b33c8f03d5ca2ac56eebd181930966e1e71d0e89799bf0", size = 40750, upload-time = "2026-10-01T03:02:29.328Z" },
 ]
 
 [[package]]
@@ -706,14 +706,14 @@ wheels = [
 
 [[package]]
 name = "pylint-gajaguar"
-version = "2.0.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pylint" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/88/b5/466c4d0fbfdd0e2521de5c9d921d22c7b864423c2aebe9f0e8c2fde74907/pylint_gajaguar-2.0.0.tar.gz", hash = "sha256:f706aabbc311b87290315edefc22d74dd05c05ca2f16fef95e3ab3d0a9a0da52", size = 87271, upload-time = "2026-09-29T03:49:01.75Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e0/83/6003eb7088893987aa4b6173b2e7f87bf178f02cf26ac1dc48c6edffb28a/pylint_gajaguar-2.0.1.tar.gz", hash = "sha256:8bbc24e64e4e1099026032a1fdbcfb87c0fd335f8f10baa81bc7bfd610205478", size = 88270, upload-time = "2026-10-01T04:06:48.624Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b1/49/4ee594c712e5e3a47cbd6dc92a3c0ca9aec47aa0df1f387655b4db394234/pylint_gajaguar-2.0.0-py3-none-any.whl", hash = "sha256:b3b6c098ebcfd6d0fe78ab4e82c09bc337d5d5cae48e45bea7375274fa2f0642", size = 20631, upload-time = "2026-09-29T03:49:00.577Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/f6/05d2d5592713e475d62dd6f0184236b96c53044eb26b62a535d82ac944a5/pylint_gajaguar-2.0.1-py3-none-any.whl", hash = "sha256:c1573a291457926054707cbf8e9dc6fbced54c1a6b656a9701abd9899eae0711", size = 20456, upload-time = "2026-10-01T04:06:47.465Z" },
 ]
 
 [[package]]
