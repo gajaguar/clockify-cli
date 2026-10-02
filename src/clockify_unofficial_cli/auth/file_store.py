@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import stat
+import sys
 from typing import TYPE_CHECKING
 
 from clockify_unofficial_cli.auth.credentials import CredentialSource
 from clockify_unofficial_cli.auth.credentials import decode
 from clockify_unofficial_cli.auth.credentials import encode
+from clockify_unofficial_cli.config.store import GROUP_OTHER_BITS
 from clockify_unofficial_cli.config.store import read_toml
 from clockify_unofficial_cli.config.store import write_private_toml
 
@@ -26,6 +29,16 @@ class FileCredentialStore:
     @staticmethod
     def available() -> bool:
         return True
+
+    def exposed(self) -> bool:
+        # st_mode does not reflect ACLs on Windows, so the check would be meaningless there.
+        if sys.platform == "win32":
+            return False
+        try:
+            mode = self.path.stat().st_mode
+        except FileNotFoundError:
+            return False
+        return bool(stat.S_IMODE(mode) & GROUP_OTHER_BITS)
 
     def get(self, profile: str) -> Credential | None:
         raw = self._entries().get(profile)
