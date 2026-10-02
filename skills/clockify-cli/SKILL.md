@@ -3,9 +3,9 @@ name: clockify-cli
 description: >-
   Operate the clockify CLI beyond the timer: authentication and profiles,
   workspaces and users, managing projects, tasks, tags, clients, user
-  groups, custom fields and webhooks, reporting tracked time, and time off
-  and approvals. Use when the user says "clockify login", "switch
-  workspace", "create a project", "list tags", "add a client", "time report", "request time off", "approve a timesheet", or asks how to
+  groups, custom fields and webhooks, reporting tracked time, time off,
+  approvals and expenses. Use when the user says "clockify login", "switch
+  workspace", "create a project", "list tags", "add a client", "time report", "request time off", "approve a timesheet", "log an expense", or asks how to
   use the clockify command.
 license: MIT
 compatibility: Requires the clockify CLI (clockify-unofficial-cli, Python 3.14+) and a configured Clockify API key
@@ -74,6 +74,11 @@ editing time entries, use the `clockify-time-tracking` skill.
    changes (`balance update --value`, `update-assignment --change`) are deltas
    and are not retried, so never repeat one blindly. These need a Standard
    plan; exit code 5 means the plan or role does not allow it.
+
+   Expenses: `clockify expense list|get|create|update|delete|receipt` and
+   `clockify expense category ...`. `--receipt FILE` uploads a receipt and
+   `receipt EXPENSE --save PATH` downloads it; binary data skips `-o` and
+   refuses to overwrite without `--force`. Expenses need a Pro plan.
 
    Read with `list`/`get` first to confirm the target before `update` or
    `delete`.

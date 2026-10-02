@@ -1,5 +1,12 @@
 # Directory Update Log
 
+## 2026-10-04
+
+* **Addition**: Added `commands/expenses.md`, which explains how receipts are
+  uploaded and downloaded and why binary data skips the output formats.
+* **Update**: Marked the expense and expense category rows of `coverage.md`
+  as `done`.
+
 ## 2026-10-03
 
 * **Addition**: Added `commands/time-off.md`, which explains how requests

@@ -205,19 +205,19 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Expenses
 
-| Endpoint                                                                  | SDK method | CLI command                                          | Phase | Status  |
-| ------------------------------------------------------------------------- | ---------- | ---------------------------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/expenses`                                  |            | `clockify expense list`                              | 5     | planned |
-| `GET /workspaces/{workspaceId}/expenses/{expenseId}`                      |            | `clockify expense get EXPENSE`                       | 5     | planned |
-| `POST /workspaces/{workspaceId}/expenses`                                 |            | `clockify expense create --receipt FILE`             | 5     | planned |
-| `PUT /workspaces/{workspaceId}/expenses/{expenseId}`                      |            | `clockify expense update EXPENSE`                    | 5     | planned |
-| `DELETE /workspaces/{workspaceId}/expenses/{expenseId}`                   |            | `clockify expense delete EXPENSE`                    | 5     | planned |
-| `GET /workspaces/{workspaceId}/expenses/{expenseId}/files/{fileId}`       |            | `clockify expense receipt EXPENSE --save FILE`       | 5     | planned |
-| `GET /workspaces/{workspaceId}/expenses/categories`                       |            | `clockify expense category list`                     | 5     | planned |
-| `POST /workspaces/{workspaceId}/expenses/categories`                      |            | `clockify expense category create NAME`              | 5     | planned |
-| `PUT /workspaces/{workspaceId}/expenses/categories/{categoryId}`          |            | `clockify expense category update CATEGORY`          | 5     | planned |
-| `PATCH /workspaces/{workspaceId}/expenses/categories/{categoryId}/status` |            | `clockify expense category archive/restore CATEGORY` | 5     | planned |
-| `DELETE /workspaces/{workspaceId}/expenses/categories/{categoryId}`       |            | `clockify expense category delete CATEGORY`          | 5     | planned |
+| Endpoint                                                                  | SDK method                                         | CLI command                                          | Phase | Status |
+| ------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/expenses`                                  | `ws.expenses.list(user_id=)`                       | `clockify expense list`                              | 5     | done   |
+| `GET /workspaces/{workspaceId}/expenses/{expenseId}`                      | `ws.expenses.get(id)`                              | `clockify expense get EXPENSE`                       | 5     | done   |
+| `POST /workspaces/{workspaceId}/expenses`                                 | `ws.expenses.create(payload)`                      | `clockify expense create --receipt FILE`             | 5     | done   |
+| `PUT /workspaces/{workspaceId}/expenses/{expenseId}`                      | `ws.expenses.update(id, payload)`                  | `clockify expense update EXPENSE`                    | 5     | done   |
+| `DELETE /workspaces/{workspaceId}/expenses/{expenseId}`                   | `ws.expenses.delete(id)`                           | `clockify expense delete EXPENSE`                    | 5     | done   |
+| `GET /workspaces/{workspaceId}/expenses/{expenseId}/files/{fileId}`       | `ws.expenses.download_file(id, file_id)`           | `clockify expense receipt EXPENSE --save FILE`       | 5     | done   |
+| `GET /workspaces/{workspaceId}/expenses/categories`                       | `ws.expense_categories.list(category_filter=)`     | `clockify expense category list`                     | 5     | done   |
+| `POST /workspaces/{workspaceId}/expenses/categories`                      | `ws.expense_categories.create(payload)`            | `clockify expense category create --name NAME`       | 5     | done   |
+| `PUT /workspaces/{workspaceId}/expenses/categories/{categoryId}`          | `ws.expense_categories.update(id, payload)`        | `clockify expense category update CATEGORY`          | 5     | done   |
+| `PATCH /workspaces/{workspaceId}/expenses/categories/{categoryId}/status` | `ws.expense_categories.update_status(id, payload)` | `clockify expense category archive/restore CATEGORY` | 5     | done   |
+| `DELETE /workspaces/{workspaceId}/expenses/categories/{categoryId}`       | `ws.expense_categories.delete(id)`                 | `clockify expense category delete CATEGORY`          | 5     | done   |
 
 ## Invoices
 
