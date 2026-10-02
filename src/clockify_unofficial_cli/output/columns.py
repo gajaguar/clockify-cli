@@ -227,3 +227,55 @@ EXPENSE_CATEGORIES: Final = (
     Column("unit", "Unit"),
     Column("priceInCents", "Unit price (cents)"),
 )
+
+INVOICES: Final = (
+    Column("id", "ID"),
+    Column("number", "Number"),
+    Column("status", "Status"),
+    Column("clientName", "Client"),
+    Column("currency", "Currency"),
+    Column("amount", "Amount (minor)"),
+    Column("balance", "Balance (minor)"),
+    Column("issuedDate", "Issued"),
+    Column("dueDate", "Due"),
+)
+
+INVOICE_DETAILS: Final = (
+    Column("id", "ID"),
+    Column("number", "Number"),
+    Column("status", "Status"),
+    Column("clientName", "Client"),
+    Column("currency", "Currency"),
+    Column("subtotal", "Subtotal (minor)"),
+    Column("amount", "Amount (minor)"),
+    Column("paid", "Paid (minor)"),
+    Column("balance", "Balance (minor)"),
+    Column("issuedDate", "Issued"),
+    Column("dueDate", "Due"),
+)
+
+INVOICE_CREATED: Final = (
+    Column("id", "ID"),
+    Column("number", "Number"),
+    Column("clientId", "Client"),
+    Column("currency", "Currency"),
+    Column("issuedDate", "Issued"),
+    Column("dueDate", "Due"),
+)
+
+INVOICE_PAYMENTS: Final = (
+    Column("id", "ID"),
+    Column("amount", "Amount (minor)"),
+    Column("date", "Date"),
+    Column("author", "Author"),
+    Column("note", "Note"),
+)
+
+INVOICE_SETTINGS: Final = (
+    Column("defaults.subject", "Subject"),
+    Column("defaults.notes", "Notes"),
+    Column("defaults.dueDays", "Due days"),
+    Column("defaults.taxPercent", "Tax %"),
+    Column("defaults.tax2Percent", "Tax 2 %"),
+    Column("defaults.taxType", "Tax type"),
+)

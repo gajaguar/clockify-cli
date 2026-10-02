@@ -4,8 +4,8 @@ description: >-
   Operate the clockify CLI beyond the timer: authentication and profiles,
   workspaces and users, managing projects, tasks, tags, clients, user
   groups, custom fields and webhooks, reporting tracked time, time off,
-  approvals and expenses. Use when the user says "clockify login", "switch
-  workspace", "create a project", "list tags", "add a client", "time report", "request time off", "approve a timesheet", "log an expense", or asks how to
+  approvals, expenses and invoices. Use when the user says "clockify login", "switch
+  workspace", "create a project", "list tags", "add a client", "time report", "request time off", "approve a timesheet", "log an expense", "create an invoice", or asks how to
   use the clockify command.
 license: MIT
 compatibility: Requires the clockify CLI (clockify-unofficial-cli, Python 3.14+) and a configured Clockify API key
@@ -79,6 +79,12 @@ editing time entries, use the `clockify-time-tracking` skill.
    `clockify expense category ...`. `--receipt FILE` uploads a receipt and
    `receipt EXPENSE --save PATH` downloads it; binary data skips `-o` and
    refuses to overwrite without `--force`. Expenses need a Pro plan.
+
+   Invoices: `clockify invoice list|get|create|update|delete|duplicate|export|
+   set-status`, plus `invoice item`, `invoice payment` and `invoice settings`.
+   Amounts are typed in major units (`120.50`) but shown in minor units.
+   `invoice item delete` renumbers the items and `invoice payment add` is not
+   idempotent, so never repeat either blindly.
 
    Read with `list`/`get` first to confirm the target before `update` or
    `delete`.

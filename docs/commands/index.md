@@ -7,3 +7,5 @@
   deltas.
 * [Expenses and binary output](expenses.md) - how receipts are uploaded and
   downloaded, and why binary data skips `-o`.
+* [Invoices](invoices.md) - amounts in minor units, list versus search, and the
+  changes Clockify does not retry.

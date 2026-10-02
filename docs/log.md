@@ -1,5 +1,12 @@
 # Directory Update Log
 
+## 2026-10-05
+
+* **Addition**: Added `commands/invoices.md`, which explains invoice amounts,
+  list versus search, and the changes Clockify does not retry.
+* **Update**: Marked the invoice, invoice item, payment and settings rows of
+  `coverage.md` as `done`.
+
 ## 2026-10-04
 
 * **Addition**: Added `commands/expenses.md`, which explains how receipts are

@@ -20,15 +20,12 @@ from clockify_unofficial_cli.runtime.params import options_from
 from clockify_unofficial_cli.runtime.prompts import confirm
 from clockify_unofficial_cli.services.expenses import find_category
 from clockify_unofficial_cli.services.listing import list_from_options
+from clockify_unofficial_cli.services.money import to_minor_units
 
 APP: Final = typer.Typer(help="Manage expense categories.", no_args_is_help=True)
 
 _CATEGORY_ARGUMENT: Final = typer.Argument(metavar="CATEGORY", help="Category ID or exact name.")
 _UNIT_PRICE: Final = typer.Option("--unit-price", help="Price per unit in major currency units, e.g. 0.58.")
-
-
-def _cents(unit_price: float) -> int:
-    return round(unit_price * 100)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -77,7 +74,7 @@ def create(
     if unit is not None:
         fields["unit"] = unit
     if unit_price is not None:
-        fields.update(has_unit_price=True, price_in_cents=_cents(unit_price))
+        fields.update(has_unit_price=True, price_in_cents=to_minor_units(unit_price))
     payload = ExpenseCategoryCreate(name=name, **fields)  # type: ignore[arg-type]
     app_context.render(single(app_context.workspace().expense_categories.create(payload), EXPENSE_CATEGORIES))
 
@@ -99,7 +96,7 @@ def update(
     if stored_unit is not None:
         fields["unit"] = stored_unit
     if unit_price is not None:
-        fields.update(has_unit_price=True, price_in_cents=_cents(unit_price))
+        fields.update(has_unit_price=True, price_in_cents=to_minor_units(unit_price))
     elif current.has_unit_price is not None:
         fields["has_unit_price"] = current.has_unit_price
         if current.price_in_cents is not None:
