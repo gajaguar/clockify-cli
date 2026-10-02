@@ -221,25 +221,25 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Invoices
 
-| Endpoint                                                                     | SDK method | CLI command                                        | Phase | Status  |
-| ---------------------------------------------------------------------------- | ---------- | -------------------------------------------------- | ----- | ------- |
-| `GET /workspaces/{workspaceId}/invoices`                                     |            | `clockify invoice list`                            | 5     | planned |
-| `POST /workspaces/{workspaceId}/invoices/info`                               |            | `clockify invoice list --status --client ...`      | 5     | planned |
-| `GET /workspaces/{workspaceId}/invoices/{invoiceId}`                         |            | `clockify invoice get INVOICE`                     | 5     | planned |
-| `POST /workspaces/{workspaceId}/invoices`                                    |            | `clockify invoice create --client CLIENT`          | 5     | planned |
-| `PUT /workspaces/{workspaceId}/invoices/{invoiceId}`                         |            | `clockify invoice update INVOICE`                  | 5     | planned |
-| `DELETE /workspaces/{workspaceId}/invoices/{invoiceId}`                      |            | `clockify invoice delete INVOICE`                  | 5     | planned |
-| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/duplicate`              |            | `clockify invoice duplicate INVOICE`               | 5     | planned |
-| `GET /workspaces/{workspaceId}/invoices/{invoiceId}/export`                  |            | `clockify invoice export INVOICE --save FILE`      | 5     | planned |
-| `PATCH /workspaces/{workspaceId}/invoices/{invoiceId}/status`                |            | `clockify invoice set-status INVOICE STATUS`       | 5     | planned |
-| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/items`                  |            | `clockify invoice item add INVOICE`                | 5     | planned |
-| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/items/import`           |            | `clockify invoice item import INVOICE --from --to` | 5     | planned |
-| `DELETE /workspaces/{workspaceId}/invoices/{invoiceId}/items/{order}`        |            | `clockify invoice item delete INVOICE ORDER`       | 5     | planned |
-| `GET /workspaces/{workspaceId}/invoices/{invoiceId}/payments`                |            | `clockify invoice payment list INVOICE`            | 5     | planned |
-| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/payments`               |            | `clockify invoice payment add INVOICE AMOUNT`      | 5     | planned |
-| `DELETE /workspaces/{workspaceId}/invoices/{invoiceId}/payments/{paymentId}` |            | `clockify invoice payment delete INVOICE PAYMENT`  | 5     | planned |
-| `GET /workspaces/{workspaceId}/invoices/settings`                            |            | `clockify invoice settings get`                    | 5     | planned |
-| `PUT /workspaces/{workspaceId}/invoices/settings`                            |            | `clockify invoice settings update`                 | 5     | planned |
+| Endpoint                                                                     | SDK method                                     | CLI command                                        | Phase | Status |
+| ---------------------------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------- | ----- | ------ |
+| `GET /workspaces/{workspaceId}/invoices`                                     | `ws.invoices.list(invoice_filter=)`            | `clockify invoice list`                            | 5     | done   |
+| `POST /workspaces/{workspaceId}/invoices/info`                               | `ws.invoices.search(search)`                   | `clockify invoice list --client --number ...`      | 5     | done   |
+| `GET /workspaces/{workspaceId}/invoices/{invoiceId}`                         | `ws.invoices.get(id)`                          | `clockify invoice get INVOICE`                     | 5     | done   |
+| `POST /workspaces/{workspaceId}/invoices`                                    | `ws.invoices.create(payload)`                  | `clockify invoice create --client CLIENT`          | 5     | done   |
+| `PUT /workspaces/{workspaceId}/invoices/{invoiceId}`                         | `ws.invoices.update(id, payload)`              | `clockify invoice update INVOICE`                  | 5     | done   |
+| `DELETE /workspaces/{workspaceId}/invoices/{invoiceId}`                      | `ws.invoices.delete(id)`                       | `clockify invoice delete INVOICE`                  | 5     | done   |
+| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/duplicate`              | `ws.invoices.duplicate(id)`                    | `clockify invoice duplicate INVOICE`               | 5     | done   |
+| `GET /workspaces/{workspaceId}/invoices/{invoiceId}/export`                  | `ws.invoices.export(id, user_locale=)`         | `clockify invoice export INVOICE --save FILE`      | 5     | done   |
+| `PATCH /workspaces/{workspaceId}/invoices/{invoiceId}/status`                | `ws.invoices.update_status(id, payload)`       | `clockify invoice set-status INVOICE STATUS`       | 5     | done   |
+| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/items`                  | `ws.invoice_items.add(id, payload)`            | `clockify invoice item add INVOICE`                | 5     | done   |
+| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/items/import`           | `ws.invoice_items.import_entries(id, payload)` | `clockify invoice item import INVOICE --from --to` | 5     | done   |
+| `DELETE /workspaces/{workspaceId}/invoices/{invoiceId}/items/{order}`        | `ws.invoice_items.delete(id, order)`           | `clockify invoice item delete INVOICE ORDER`       | 5     | done   |
+| `GET /workspaces/{workspaceId}/invoices/{invoiceId}/payments`                | `ws.invoice_payments.list(id)`                 | `clockify invoice payment list INVOICE`            | 5     | done   |
+| `POST /workspaces/{workspaceId}/invoices/{invoiceId}/payments`               | `ws.invoice_payments.add(id, payload)`         | `clockify invoice payment add INVOICE --amount N`  | 5     | done   |
+| `DELETE /workspaces/{workspaceId}/invoices/{invoiceId}/payments/{paymentId}` | `ws.invoice_payments.delete(id, payment_id)`   | `clockify invoice payment delete INVOICE PAYMENT`  | 5     | done   |
+| `GET /workspaces/{workspaceId}/invoices/settings`                            | `ws.invoices.get_settings()`                   | `clockify invoice settings get`                    | 5     | done   |
+| `PUT /workspaces/{workspaceId}/invoices/settings`                            | `ws.invoices.update_settings(payload)`         | `clockify invoice settings update`                 | 5     | done   |
 
 ## Scheduling
 
