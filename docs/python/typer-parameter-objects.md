@@ -39,3 +39,7 @@ Rules:
 - Fields are keyword-only for Typer, so a field that would shadow a builtin is
   renamed (`field_type` with `--type`).
 - Use it from six options up; a shorter signature stays a plain function.
+
+Options shared by several commands live in a base dataclass that each command's
+dataclass extends; `options_from` reads the annotations of the whole class
+hierarchy.

@@ -25,6 +25,11 @@ See [`log.md`](log.md) for the bundle's change history.
 * [Endpoint coverage](coverage.md) - each Clockify operation mapped to its
   SDK method and CLI command.
 
+## Commands
+
+* [Commands](commands/index.md) - behavior of command groups that isn't
+  obvious from `--help`.
+
 ## Python
 
 * [Python](python/index.md) - the interpreter source and the

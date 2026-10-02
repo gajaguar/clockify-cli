@@ -145,19 +145,19 @@ the live spec so a new upstream endpoint shows up as a missing row.
 
 ## Reports
 
-| Endpoint                                                   | SDK method | CLI command                              | Phase | Status  |
-| ---------------------------------------------------------- | ---------- | ---------------------------------------- | ----- | ------- |
-| `POST /workspaces/{workspaceId}/reports/detailed`          |            | `clockify report detailed`               | 3     | planned |
-| `POST /workspaces/{workspaceId}/reports/summary`           |            | `clockify report summary`                | 3     | planned |
-| `POST /workspaces/{workspaceId}/reports/weekly`            |            | `clockify report weekly`                 | 3     | planned |
-| `POST /workspaces/{workspaceId}/reports/attendance`        |            | `clockify report attendance`             | 3     | planned |
-| `POST /workspaces/{workspaceId}/reports/expenses/detailed` |            | `clockify report expenses`               | 3     | planned |
-| `POST /workspaces/{workspaceId}/audit-log`                 |            | `clockify report audit-log`              | 3     | planned |
-| `GET /shared-reports/{id}`                                 |            | `clockify shared-report generate REPORT` | 3     | planned |
-| `GET /workspaces/{workspaceId}/shared-reports`             |            | `clockify shared-report list`            | 3     | planned |
-| `POST /workspaces/{workspaceId}/shared-reports`            |            | `clockify shared-report create NAME`     | 3     | planned |
-| `PUT /workspaces/{workspaceId}/shared-reports/{id}`        |            | `clockify shared-report update REPORT`   | 3     | planned |
-| `DELETE /workspaces/{workspaceId}/shared-reports/{id}`     |            | `clockify shared-report delete REPORT`   | 3     | planned |
+| Endpoint                                                   | SDK method                      | CLI command                              | Phase | Status  |
+| ---------------------------------------------------------- | ------------------------------- | ---------------------------------------- | ----- | ------- |
+| `POST /workspaces/{workspaceId}/reports/detailed`          | `ws.reports.detailed(request)`  | `clockify report detailed`               | 3     | done    |
+| `POST /workspaces/{workspaceId}/reports/summary`           | `ws.reports.summary(request)`   | `clockify report summary`                | 3     | done    |
+| `POST /workspaces/{workspaceId}/reports/weekly`            | `ws.reports.weekly(request)`    | `clockify report weekly`                 | 3     | done    |
+| `POST /workspaces/{workspaceId}/reports/attendance`        |                                 | `clockify report attendance`             | 3     | planned |
+| `POST /workspaces/{workspaceId}/reports/expenses/detailed` |                                 | `clockify report expenses`               | 3     | planned |
+| `POST /workspaces/{workspaceId}/audit-log`                 |                                 | `clockify report audit-log`              | 3     | planned |
+| `GET /shared-reports/{id}`                                 | `ws.reports.shared(id, query=)` | `clockify shared-report generate REPORT` | 3     | done    |
+| `GET /workspaces/{workspaceId}/shared-reports`             |                                 | `clockify shared-report list`            | 3     | planned |
+| `POST /workspaces/{workspaceId}/shared-reports`            |                                 | `clockify shared-report create NAME`     | 3     | planned |
+| `PUT /workspaces/{workspaceId}/shared-reports/{id}`        |                                 | `clockify shared-report update REPORT`   | 3     | planned |
+| `DELETE /workspaces/{workspaceId}/shared-reports/{id}`     |                                 | `clockify shared-report delete REPORT`   | 3     | planned |
 
 ## Time off
 
