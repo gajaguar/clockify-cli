@@ -21,7 +21,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "clockify-unofficial-sdk>=1.6,<2",
+  "clockify-unofficial-sdk>=1.10,<2",
   "keyring>=25.0",
   "platformdirs>=4.0",
   "pydantic>=2.9",
