@@ -1,5 +1,12 @@
 # Directory Update Log
 
+## 2026-10-02
+
+* **Addition**: Added `commands/reports.md`, which explains the report date
+  range and why totals go to stderr.
+* **Update**: Marked the `report summary|detailed|weekly` and
+  `shared-report generate` rows of `coverage.md` as `done`.
+
 ## 2026-10-01
 
 * **Update**: Raised the SDK floor to `1.10` and marked the `group add-user`,

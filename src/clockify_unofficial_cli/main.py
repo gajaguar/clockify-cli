@@ -20,6 +20,8 @@ from clockify_unofficial_cli.commands import custom_field
 from clockify_unofficial_cli.commands import entry
 from clockify_unofficial_cli.commands import group
 from clockify_unofficial_cli.commands import project
+from clockify_unofficial_cli.commands import report
+from clockify_unofficial_cli.commands import shared_report
 from clockify_unofficial_cli.commands import tag
 from clockify_unofficial_cli.commands import task
 from clockify_unofficial_cli.commands import timer_shortcuts
@@ -121,6 +123,8 @@ def create_app(services_factory: Callable[[], Services] = default_services) -> t
     cli.add_typer(custom_field.APP, name="custom-field")
     cli.add_typer(group.APP, name="group")
     cli.add_typer(entry.APP, name="entry")
+    cli.add_typer(report.APP, name="report")
+    cli.add_typer(shared_report.APP, name="shared-report")
     cli.add_typer(webhook.APP, name="webhook")
     cli.registered_commands.extend(timer_shortcuts.APP.registered_commands)
     return cli

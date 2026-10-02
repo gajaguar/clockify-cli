@@ -2,9 +2,9 @@
 name: clockify-cli
 description: >-
   Operate the clockify CLI beyond the timer: authentication and profiles,
-  workspaces and users, and managing projects, tasks, tags, clients, user
-  groups and custom fields. Use when the user says "clockify login", "switch
-  workspace", "create a project", "list tags", "add a client", or asks how to
+  workspaces and users, managing projects, tasks, tags, clients, user
+  groups, custom fields and webhooks, and reporting tracked time. Use when the user says "clockify login", "switch
+  workspace", "create a project", "list tags", "add a client", "time report", or asks how to
   use the clockify command.
 license: MIT
 compatibility: Requires the clockify CLI (clockify-unofficial-cli, Python 3.14+) and a configured Clockify API key
@@ -61,6 +61,12 @@ editing time entries, use the `clockify-time-tracking` skill.
    | `group`        | list, create, update, delete, add-user, remove-user             | user groups                                                                |
    | `webhook`      | list, get, create, update, delete, rotate-token, logs, statuses | `create` and `rotate-token` print the signing token; `list`/`get` never do |
    | `custom-field` | list, create, update, delete                                    |                                                                            |
+
+   Reports: `clockify report summary|detailed|weekly` take `--period
+   today|yesterday|this-week|last-week|this-month|last-month` or `--from/--to`,
+   plus `-P`, `--client`, `--tag` and `--user` filters. Rows go to stdout, the
+   totals line to stderr. `clockify shared-report generate REPORT` opens a
+   shared report.
 
    Read with `list`/`get` first to confirm the target before `update` or
    `delete`.

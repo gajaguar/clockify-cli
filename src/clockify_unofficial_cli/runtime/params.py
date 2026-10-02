@@ -20,7 +20,10 @@ def _parameter(field: dataclasses.Field[object], annotation: object) -> inspect.
 # fabricates that signature from a dataclass and hands the callback one options object instead,
 # which keeps commands within the argument limit without dropping any flag.
 def options_from[T, R](options: type[T]) -> Callable[[Callable[[typer.Context, T], R]], Callable[..., R]]:
-    annotations = inspect.get_annotations(options, eval_str=True)
+    # Walk the MRO so an options dataclass can extend a shared base of common flags.
+    annotations: dict[str, object] = {}
+    for klass in reversed(options.__mro__):
+        annotations.update(inspect.get_annotations(klass, eval_str=True))
     context = inspect.Parameter("ctx", inspect.Parameter.KEYWORD_ONLY, annotation=typer.Context)
     fields = dataclasses.fields(options)  # type: ignore[arg-type]
     parameters = [context, *(_parameter(field, annotations[field.name]) for field in fields)]

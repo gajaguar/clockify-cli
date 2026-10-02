@@ -112,3 +112,21 @@ WEBHOOK_STATUSES: Final = (
     Column("retryCount", "Retries"),
     Column("respondedAt", "Responded at"),
 )
+
+REPORT_GROUPS: Final = (
+    Column("level", "Level"),
+    Column("id", "ID"),
+    Column("name", "Name"),
+    Column("duration", "Seconds"),
+)
+
+REPORT_ENTRIES: Final = (
+    Column("_id", "ID"),
+    Column("description", "Description"),
+    Column("userName", "User"),
+    Column("projectName", "Project"),
+    Column("timeInterval.start", "Start"),
+    Column("timeInterval.end", "End"),
+    Column("timeInterval.duration", "Seconds"),
+    Column("billable", "Billable"),
+)

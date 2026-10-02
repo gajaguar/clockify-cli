@@ -79,3 +79,40 @@ def test_options_from_requires_arguments_without_defaults() -> None:
     result = RUNNER.invoke(app, ["create"])
     # Assert
     assert result.exit_code == 2
+
+
+@dataclass(frozen=True, slots=True)
+class _Base:
+    project: Annotated[str | None, typer.Option("--project", "-P", help="Project filter.")] = None
+
+
+@dataclass(frozen=True, slots=True)
+class _Child(_Base):
+    limit: Annotated[int | None, typer.Option("--limit")] = None
+
+
+def _child_app(seen: list[_Child]) -> typer.Typer:
+    app = typer.Typer()
+
+    @app.command()
+    @options_from(_Child)
+    def run(ctx: typer.Context, options: _Child) -> None:
+        del ctx
+        seen.append(options)
+
+    @app.command()
+    def other() -> None:
+        return None
+
+    return app
+
+
+def test_options_from_includes_fields_inherited_from_a_base_dataclass() -> None:
+    # Arrange
+    seen: list[_Child] = []
+    app = _child_app(seen)
+    # Act
+    result = RUNNER.invoke(app, ["run", "-P", "web", "--limit", "3"])
+    # Assert
+    assert result.exit_code == 0
+    assert seen == [_Child(project="web", limit=3)]
