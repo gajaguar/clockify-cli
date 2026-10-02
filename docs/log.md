@@ -32,6 +32,8 @@
 
 ## 2026-10-02
 
+* **Removal**: `.gitignore` drops the `.prompts/` entry; local agent scratch
+  files are ignored globally.
 * **Change**: the first `make docs-retag` run re-assigned the tags of several
   notes.
 * **Addition**: `conventions/help-check.md`, `conventions/claude-md-check.md` and
@@ -43,6 +45,11 @@
   range and why totals go to stderr.
 * **Update**: Marked the `report summary|detailed|weekly` and
   `shared-report generate` rows of `coverage.md` as `done`.
+* **Addition**: `conventions/versioning.md` sets the SemVer bump criteria, tags
+  only minor and major bumps, and leaves releases on demand.
+* **Addition**: `AGENTS.md` links to `conventions/versioning.md`.
+* **Change**: `conventions/tag-vocabulary.md` states the tag form: lowercase, one
+  word by default, no parent prefix.
 
 ## 2026-10-01
 

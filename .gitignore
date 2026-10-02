@@ -7,9 +7,6 @@ mise.local.toml
 # Cached upstream OpenAPI document (make openapi-fetch)
 .cache/
 
-# Local prompt artifacts
-.prompts/
-
 # Obsidian vault metadata (docs/ is opened directly as a vault)
 .obsidian/
 
