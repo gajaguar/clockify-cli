@@ -96,6 +96,12 @@ def resolve_group(app_context: AppContext, term: str) -> str:
     return resolve(term, candidates, noun="group")
 
 
+def resolve_expense_category(app_context: AppContext, term: str) -> str:
+    workspace = app_context.workspace()
+    candidates = _candidate_ids_from(workspace.expense_categories.list(), name=lambda item: item.name or str(item.id))
+    return resolve(term, candidates, noun="expense category")
+
+
 def resolve_policy(app_context: AppContext, term: str) -> str:
     workspace = app_context.workspace()
     candidates = _candidate_ids_from(workspace.time_off_policies.list(), name=lambda item: item.name or str(item.id))
@@ -132,6 +138,7 @@ __all__ = [
     "resolve",
     "resolve_client",
     "resolve_custom_field",
+    "resolve_expense_category",
     "resolve_group",
     "resolve_policy",
     "resolve_project",

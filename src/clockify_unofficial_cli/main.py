@@ -19,6 +19,7 @@ from clockify_unofficial_cli.commands import client
 from clockify_unofficial_cli.commands import config
 from clockify_unofficial_cli.commands import custom_field
 from clockify_unofficial_cli.commands import entry
+from clockify_unofficial_cli.commands import expense
 from clockify_unofficial_cli.commands import group
 from clockify_unofficial_cli.commands import project
 from clockify_unofficial_cli.commands import report
@@ -125,6 +126,7 @@ def create_app(services_factory: Callable[[], Services] = default_services) -> t
     cli.add_typer(custom_field.APP, name="custom-field")
     cli.add_typer(group.APP, name="group")
     cli.add_typer(entry.APP, name="entry")
+    cli.add_typer(expense.APP, name="expense")
     cli.add_typer(report.APP, name="report")
     cli.add_typer(time_off.APP, name="time-off")
     cli.add_typer(approval.APP, name="approval")

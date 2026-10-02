@@ -197,3 +197,33 @@ APPROVAL_REQUESTS: Final = (
     Column("dateRange.start", "Start"),
     Column("dateRange.end", "End"),
 )
+
+EXPENSES: Final = (
+    Column("id", "ID"),
+    Column("date", "Date"),
+    Column("category.name", "Category"),
+    Column("project.name", "Project"),
+    Column("total", "Total"),
+    Column("billable", "Billable"),
+    Column("notes", "Notes"),
+    Column("fileName", "Receipt"),
+)
+
+EXPENSE: Final = (
+    Column("id", "ID"),
+    Column("date", "Date"),
+    Column("categoryId", "Category"),
+    Column("projectId", "Project"),
+    Column("total", "Total"),
+    Column("billable", "Billable"),
+    Column("notes", "Notes"),
+    Column("fileId", "Receipt ID"),
+)
+
+EXPENSE_CATEGORIES: Final = (
+    Column("id", "ID"),
+    Column("name", "Name"),
+    Column("archived", "Archived"),
+    Column("unit", "Unit"),
+    Column("priceInCents", "Unit price (cents)"),
+)
