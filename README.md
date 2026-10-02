@@ -248,8 +248,6 @@ Live tests are excluded from `make test`. They require
 
 - Headless Linux hosts may not provide a Secret Service keyring backend. Use
   `CLOCKIFY_API_KEY` or the explicit `--insecure-storage` fallback.
-- The SDK is a `uv` git dependency pinned to a tag, so installation requires
-  access to GitHub.
 - Python 3.14 is the minimum version required by the CLI and SDK.
 
 ## Roadmap

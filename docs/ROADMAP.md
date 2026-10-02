@@ -40,8 +40,8 @@ Every phase after Phase 1 goes through both repositories in the same order:
    - its own `coverage.md` rows.
 
    Then tag the release.
-2. **Pin.** Bump the `clockify-unofficial-sdk` tag in the CLI's
-   `[tool.uv.sources]` and run `uv lock`.
+2. **Pin.** Raise the `clockify-unofficial-sdk` floor in the CLI's
+   `pyproject.toml` to the released version and run `uv lock`.
 3. **CLI.** Add the commands and services, following
    [`ARCHITECTURE.md`](ARCHITECTURE.md#adding-a-command). Flip the
    `coverage.md` rows to `done`.
@@ -53,7 +53,7 @@ A phase is **done** when:
 - every row assigned to it is `done` in both coverage tables;
 - each new command has a success test, a JSON-output test and a failure
   exit-code test;
-- the SDK tag pinned in `pyproject.toml` is the phase's release.
+- the SDK floor in `pyproject.toml` is the phase's release.
 
 ## Phase 0 — Foundation
 

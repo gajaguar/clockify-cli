@@ -1,5 +1,11 @@
 # Directory Update Log
 
+## 2026-10-01
+
+* **Update**: The SDK now comes from PyPI instead of a `uv` git source, so
+  `README.md`, `AGENTS.md`, `ROADMAP.md` and `ARCHITECTURE.md` describe
+  raising the SDK floor instead of bumping a tag.
+
 ## 2026-09-30
 
 * **Update**: Removed the `generated` field from `agents/plugin-identity.md`,
