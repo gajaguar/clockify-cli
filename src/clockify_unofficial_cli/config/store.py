@@ -17,6 +17,7 @@ if TYPE_CHECKING:
 
 PRIVATE_FILE_MODE: Final = 0o600
 PRIVATE_DIR_MODE: Final = 0o700
+GROUP_OTHER_BITS: Final = 0o077
 
 
 def read_toml(path: Path) -> dict[str, object]:

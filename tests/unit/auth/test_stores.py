@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import stat
+import sys
 from typing import TYPE_CHECKING
 from typing import Final
 
@@ -123,6 +124,39 @@ def test_file_store_writes_owner_only_file_and_deletes_entries(tmp_path: Path) -
     assert mode == 0o600
     assert deleted == [True, False]
     assert store.get("work") is None
+
+
+@pytest.mark.parametrize(("mode", "expected"), [(0o600, False), (0o640, True), (0o644, True)])
+def test_file_store_reports_group_or_other_access(tmp_path: Path, mode: int, expected: bool) -> None:
+    # Arrange
+    store = FileCredentialStore(tmp_path / "credentials.toml")
+    store.set("work", CREDENTIAL)
+    store.path.chmod(mode)
+    # Act
+    exposed = store.exposed()
+    # Assert
+    assert exposed is expected
+
+
+def test_file_store_without_file_is_not_exposed(tmp_path: Path) -> None:
+    # Arrange
+    store = FileCredentialStore(tmp_path / "missing.toml")
+    # Act
+    exposed = store.exposed()
+    # Assert
+    assert exposed is False
+
+
+def test_file_store_skips_permission_check_on_windows(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Arrange
+    store = FileCredentialStore(tmp_path / "credentials.toml")
+    store.set("work", CREDENTIAL)
+    store.path.chmod(0o644)
+    monkeypatch.setattr(sys, "platform", "win32")
+    # Act
+    exposed = store.exposed()
+    # Assert
+    assert exposed is False
 
 
 def test_resolve_prefers_environment_over_keyring_over_file(services: Services, environ: dict[str, str]) -> None:

@@ -197,3 +197,43 @@ def test_token_prints_raw_key(runner: CliRunner, cli: typer.Typer, services: Ser
     # Assert
     assert result.exit_code == ExitCode.OK
     assert result.stdout == f"{API_KEY}\n"
+
+
+def test_token_warns_when_credentials_file_is_exposed(runner: CliRunner, cli: typer.Typer, services: Services) -> None:
+    # Arrange
+    services.credentials.file.set("default", ApiKeyCredential(api_key=API_KEY))
+    services.credentials.file.path.chmod(0o644)
+    # Act
+    result = runner.invoke(cli, ["auth", "token"])
+    # Assert
+    assert result.exit_code == ExitCode.OK
+    assert result.stdout == f"{API_KEY}\n"
+    assert "is readable by group or others" in result.stderr
+
+
+def test_token_is_silent_when_credentials_file_is_owner_only(
+    runner: CliRunner, cli: typer.Typer, services: Services
+) -> None:
+    # Arrange
+    services.credentials.file.set("default", ApiKeyCredential(api_key=API_KEY))
+    # Act
+    result = runner.invoke(cli, ["auth", "token"])
+    # Assert
+    assert result.exit_code == ExitCode.OK
+    assert "readable by group or others" not in result.stderr
+
+
+@respx.mock
+def test_status_warns_once_when_credentials_file_is_exposed(
+    runner: CliRunner, cli: typer.Typer, services: Services
+) -> None:
+    # Arrange
+    respx.get(f"{BASE_URL}/user").mock(return_value=Response(200, json=USER_PAYLOAD))
+    services.credentials.file.set("default", ApiKeyCredential(api_key=API_KEY))
+    services.credentials.file.path.chmod(0o644)
+    # Act
+    result = runner.invoke(cli, ["-o", "json", "auth", "status"])
+    # Assert
+    assert result.exit_code == ExitCode.OK
+    assert json.loads(result.stdout)["source"] == "file"
+    assert result.stderr.count("is readable by group or others") == 1

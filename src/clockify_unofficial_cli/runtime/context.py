@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 from clockify import UserId
 from rich.console import Console
 
+from clockify_unofficial_cli.auth.credentials import CredentialSource
 from clockify_unofficial_cli.runtime.client_factory import ClientRequest
 from clockify_unofficial_cli.runtime.errors import CliError
 from clockify_unofficial_cli.runtime.exit_codes import ExitCode
@@ -42,14 +43,21 @@ class AppContext:
     renderer: Renderer
     _client: ClockifyClient | None = field(default=None, init=False, repr=False)
     _user_id: UserId | None = field(default=None, init=False, repr=False)
+    _credential: ResolvedCredential | None = field(default=None, init=False, repr=False)
 
     def credential(self) -> ResolvedCredential:
-        resolved = self.services.credentials.resolve(self.options.profile_name)
-        if resolved is None:
-            message = f"Not logged in (profile '{self.options.profile_name}')."
-            hint = "Run `clockify auth login` or set CLOCKIFY_API_KEY."
-            raise CliError(message, exit_code=ExitCode.CONFIGURATION, hint=hint)
-        return resolved
+        if self._credential is None:
+            stores = self.services.credentials
+            resolved = stores.resolve(self.options.profile_name)
+            if resolved is None:
+                message = f"Not logged in (profile '{self.options.profile_name}')."
+                hint = "Run `clockify auth login` or set CLOCKIFY_API_KEY."
+                raise CliError(message, exit_code=ExitCode.CONFIGURATION, hint=hint)
+            if resolved.source is CredentialSource.FILE and stores.file.exposed():
+                path = stores.file.path
+                self.notify(f"Warning: {path} is readable by group or others; run `chmod 600 {path}`.")
+            self._credential = resolved
+        return self._credential
 
     def client(self) -> ClockifyClient:
         if self._client is None:
@@ -79,7 +87,7 @@ class AppContext:
     # Status messages go to stderr so stdout stays clean for piping rendered data.
     @staticmethod
     def notify(message: str) -> None:
-        Console(stderr=True, highlight=False).print(message, markup=False)
+        Console(stderr=True, highlight=False).print(message, markup=False, soft_wrap=True)
 
     def render(self, dataset: Dataset) -> None:
         self.renderer.render(dataset)
@@ -89,6 +97,7 @@ class AppContext:
             self._client.close()
             self._client = None
         self._user_id = None
+        self._credential = None
 
 
 def get_app_context(ctx: typer.Context) -> AppContext:

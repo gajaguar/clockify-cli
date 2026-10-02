@@ -133,6 +133,8 @@ sequenceDiagram
   - `CLOCKIFY_API_KEY` in the environment, for CI.
   - A plaintext `credentials.toml` with `0600` permissions, written **only**
     with `--insecure-storage`, for headless hosts without a keyring backend.
+    Commands warn on stderr when that file is readable by group or others
+    (the check is skipped on Windows).
 - **Resolution order** for every command: environment → keyring → file. The
   first store that holds a credential for the active profile wins.
 - **Commands.**
