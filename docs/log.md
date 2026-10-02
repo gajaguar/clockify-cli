@@ -52,6 +52,8 @@
   word by default, no parent prefix.
 * **Addition**: `make release-tag` (`mk/python.mk`) tags the base branch as
   `v<project.version>` after a minor or major bump merges.
+* **Change**: `conventions/versioning.md` names `make release-tag` as the way to
+  tag where the `Makefile` defines it.
 
 ## 2026-10-01
 
