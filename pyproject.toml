@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "clockify-unofficial-cli"
-version = "0.7.0"
+version = "1.0.0"
 description = "Unofficial command-line interface for Clockify, built on clockify-unofficial-sdk."
 readme = "README.md"
 license = "MIT"
@@ -14,7 +14,7 @@ authors = [
 requires-python = ">=3.14"
 keywords = ["clockify", "time-tracking", "cli"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3.14",
