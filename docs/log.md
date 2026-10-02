@@ -32,6 +32,13 @@
 
 ## 2026-10-02
 
+* **Change**: the first `make docs-retag` run re-assigned the tags of several
+  notes.
+* **Addition**: `conventions/help-check.md`, `conventions/claude-md-check.md` and
+  `agents/opencode-mcp-config.md`, and the shared `agents/` notes match their
+  template copy again.
+* **Addition**: `okf-base.yaml`, `make docs-lint`, `tools/docs-retag.py`,
+  `conventions/tag-vocabulary.md` and `toolchain/retag-notes.md`.
 * **Addition**: Added `commands/reports.md`, which explains the report date
   range and why totals go to stderr.
 * **Update**: Marked the `report summary|detailed|weekly` and

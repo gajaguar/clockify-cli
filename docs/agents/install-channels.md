@@ -2,9 +2,9 @@
 type: guideline
 title: Install channels
 description: Three ways to install agent skills today (the Claude Code marketplace, the npx skills CLI, and opencode's native skill tool) and what each delivers.
-tags: [agents, install]
+tags: [agents, install, toolchain]
 status: stable
-stale_after: 2027-03-29T00:00:00Z
+stale_after: 2027-03-29
 sources:
   - id: claude-discover-plugins
     resource: https://code.claude.com/docs/en/discover-plugins

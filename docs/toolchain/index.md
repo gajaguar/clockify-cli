@@ -12,3 +12,5 @@ and why.
   package through Trusted Publishing.
 * [The Claude Code plugin](claude-plugin.md) - the agent skills the
   repository ships and how they are validated.
+* [Re-tag the notes](retag-notes.md) - run `make docs-retag`, review the
+  dry run, then write the tags.

@@ -2,7 +2,7 @@
 type: playbook
 title: Roadmap
 description: How the CLI reached 1.0.0 by covering everything the SDK offers, and what waits for SDK support afterwards.
-tags: [roadmap]
+tags: [roadmap, release]
 status: stable
 ---
 
