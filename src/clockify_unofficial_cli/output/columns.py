@@ -86,3 +86,29 @@ TIME_ENTRIES: Final = (
     Column("timeInterval.duration", "Duration"),
     Column("billable", "Billable"),
 )
+
+WEBHOOKS: Final = (
+    Column("id", "ID"),
+    Column("name", "Name"),
+    Column("url", "URL"),
+    Column("webhookEvent", "Event"),
+    Column("triggerSourceType", "Source type"),
+    Column("enabled", "Enabled"),
+)
+
+WEBHOOKS_WITH_TOKEN: Final = (*WEBHOOKS, Column("authToken", "Signing token"))
+
+WEBHOOK_LOGS: Final = (
+    Column("id", "ID"),
+    Column("statusCode", "Status"),
+    Column("respondedAt", "Responded at"),
+    Column("webhookEventStatusId", "Event status"),
+)
+
+WEBHOOK_STATUSES: Final = (
+    Column("id", "ID"),
+    Column("status", "Status"),
+    Column("statusCode", "HTTP"),
+    Column("retryCount", "Retries"),
+    Column("respondedAt", "Responded at"),
+)

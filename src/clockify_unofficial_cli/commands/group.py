@@ -15,6 +15,7 @@ from clockify_unofficial_cli.runtime.errors import handle_errors
 from clockify_unofficial_cli.runtime.prompts import confirm
 from clockify_unofficial_cli.services.listing import list_from_options
 from clockify_unofficial_cli.services.resolve import resolve_group
+from clockify_unofficial_cli.services.resolve import resolve_user
 
 APP: Final = typer.Typer(help="Manage workspace user groups.", no_args_is_help=True)
 
@@ -87,3 +88,31 @@ def delete(
     group_id = resolve_group(app_context, term)
     app_context.workspace().user_groups.delete(group_id)
     app_context.notify(f"Deleted user group '{group_id}'.")
+
+
+@APP.command(name="add-user", help="Add a user to a group.")
+@handle_errors
+def add_user(
+    ctx: typer.Context,
+    group_term: Annotated[str, typer.Argument(metavar="GROUP", help="Group ID or exact name.")],
+    user_term: Annotated[str, typer.Argument(metavar="USER", help="User ID, email or exact name.")],
+) -> None:
+    app_context = get_app_context(ctx)
+    group_id = resolve_group(app_context, group_term)
+    user_id = resolve_user(app_context, user_term)
+    group = app_context.workspace().user_groups.add_user(group_id, user_id)
+    app_context.render(single(group, GROUPS))
+
+
+@APP.command(name="remove-user", help="Remove a user from a group.")
+@handle_errors
+def remove_user(
+    ctx: typer.Context,
+    group_term: Annotated[str, typer.Argument(metavar="GROUP", help="Group ID or exact name.")],
+    user_term: Annotated[str, typer.Argument(metavar="USER", help="User ID, email or exact name.")],
+) -> None:
+    app_context = get_app_context(ctx)
+    group_id = resolve_group(app_context, group_term)
+    user_id = resolve_user(app_context, user_term)
+    group = app_context.workspace().user_groups.remove_user(group_id, user_id)
+    app_context.render(single(group, GROUPS))

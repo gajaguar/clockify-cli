@@ -2,6 +2,8 @@
 
 ## 2026-10-01
 
+* **Update**: Raised the SDK floor to `1.10` and marked the `group add-user`,
+  `group remove-user` and `webhook` rows of `coverage.md` as `done`.
 * **Update**: The SDK now comes from PyPI instead of a `uv` git source, so
   `README.md`, `AGENTS.md`, `ROADMAP.md` and `ARCHITECTURE.md` describe
   raising the SDK floor instead of bumping a tag.

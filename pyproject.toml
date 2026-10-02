@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "clockify-unofficial-cli"
-version = "0.2.1"
+version = "0.3.0"
 description = "Unofficial command-line interface for Clockify, built on clockify-unofficial-sdk."
 readme = "README.md"
 license = "MIT"
@@ -21,7 +21,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "clockify-unofficial-sdk>=1.6,<2",
+  "clockify-unofficial-sdk>=1.10,<2",
   "keyring>=25.0",
   "platformdirs>=4.0",
   "pydantic>=2.9",
