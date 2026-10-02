@@ -1,5 +1,13 @@
 # Directory Update Log
 
+## 2026-10-03
+
+* **Addition**: Added `commands/time-off.md`, which explains how requests
+  find their policy, why policy updates keep unchanged settings, and which
+  balance changes are deltas.
+* **Update**: Marked the time off and approval rows of `coverage.md` as
+  `done`, except the per-user resubmit, which the SDK does not offer.
+
 ## 2026-10-02
 
 * **Addition**: Added `commands/reports.md`, which explains the report date

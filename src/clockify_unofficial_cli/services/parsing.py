@@ -115,4 +115,8 @@ def _resolve_absolute(value: str) -> datetime.datetime:
     return parsed.astimezone(datetime.UTC)
 
 
-__all__ = ["parse_duration", "parse_instant"]
+def parse_date(value: str) -> datetime.date:
+    return parse_instant(value).date()
+
+
+__all__ = ["parse_date", "parse_duration", "parse_instant"]
