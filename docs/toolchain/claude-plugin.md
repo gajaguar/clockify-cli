@@ -2,7 +2,7 @@
 type: tool
 title: The Claude Code plugin
 description: The repository root is a Claude Code plugin whose two skills teach an agent to drive the clockify CLI.
-tags: [toolchain, agents]
+tags: [agents]
 status: stable
 ---
 
