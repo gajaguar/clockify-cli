@@ -1,5 +1,6 @@
 gajaguar
 gerónimo
+katex
 vasconcelos
 markdownlint
 cspell
