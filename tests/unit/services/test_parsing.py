@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 
 import pytest
 
@@ -17,7 +17,7 @@ def test_parse_duration_with_hours_and_minutes() -> None:
     # Act
     result = parse_duration(value)
     # Assert
-    assert result == datetime.timedelta(hours=1, minutes=30)
+    assert result == dt.timedelta(hours=1, minutes=30)
 
 
 def test_parse_duration_with_only_minutes() -> None:
@@ -26,7 +26,7 @@ def test_parse_duration_with_only_minutes() -> None:
     # Act
     result = parse_duration(value)
     # Assert
-    assert result == datetime.timedelta(minutes=90)
+    assert result == dt.timedelta(minutes=90)
 
 
 def test_parse_duration_with_clock_format() -> None:
@@ -35,7 +35,7 @@ def test_parse_duration_with_clock_format() -> None:
     # Act
     result = parse_duration(value)
     # Assert
-    assert result == datetime.timedelta(hours=1, minutes=30)
+    assert result == dt.timedelta(hours=1, minutes=30)
 
 
 def test_parse_duration_with_clock_format_with_seconds() -> None:
@@ -44,7 +44,7 @@ def test_parse_duration_with_clock_format_with_seconds() -> None:
     # Act
     result = parse_duration(value)
     # Assert
-    assert result == datetime.timedelta(hours=1, minutes=30, seconds=45)
+    assert result == dt.timedelta(hours=1, minutes=30, seconds=45)
 
 
 def test_parse_duration_rejects_invalid_input() -> None:
@@ -63,7 +63,7 @@ def test_parse_instant_with_iso_format() -> None:
     # Act
     result = parse_instant(value)
     # Assert
-    assert result == datetime.datetime(2026, 9, 17, 9, 0, tzinfo=datetime.UTC)
+    assert result == dt.datetime(2026, 9, 17, 9, 0, tzinfo=dt.UTC)
 
 
 def test_parse_instant_with_clock_only() -> None:
@@ -72,7 +72,7 @@ def test_parse_instant_with_clock_only() -> None:
     # Act
     result = parse_instant(value)
     # Assert
-    assert result.tzinfo == datetime.UTC
+    assert result.tzinfo == dt.UTC
     assert result.hour == 9
     assert result.minute == 0
 
@@ -81,12 +81,12 @@ def test_parse_instant_with_relative_offset() -> None:
     # Arrange
     value = "-2h"
     # Act
-    before = datetime.datetime.now(datetime.UTC)
+    before = dt.datetime.now(dt.UTC)
     result = parse_instant(value)
-    after = datetime.datetime.now(datetime.UTC)
+    after = dt.datetime.now(dt.UTC)
     # Assert
-    expected_low = before - datetime.timedelta(hours=2, seconds=1)
-    expected_high = after - datetime.timedelta(hours=2) + datetime.timedelta(seconds=1)
+    expected_low = before - dt.timedelta(hours=2, seconds=1)
+    expected_high = after - dt.timedelta(hours=2) + dt.timedelta(seconds=1)
     assert expected_low <= result <= expected_high
 
 
@@ -96,8 +96,8 @@ def test_parse_instant_with_yesterday_keyword() -> None:
     # Act
     result = parse_instant(value)
     # Assert
-    today = datetime.datetime.now(datetime.UTC).date()
-    assert result.date() == today - datetime.timedelta(days=1)
+    today = dt.datetime.now(dt.UTC).date()
+    assert result.date() == today - dt.timedelta(days=1)
     assert result.hour == 9
     assert result.minute == 0
 
@@ -108,7 +108,7 @@ def test_parse_instant_with_today_keyword() -> None:
     # Act
     result = parse_instant(value)
     # Assert
-    today = datetime.datetime.now(datetime.UTC).date()
+    today = dt.datetime.now(dt.UTC).date()
     assert result.date() == today
 
 
@@ -128,4 +128,4 @@ def test_parse_date_keeps_the_calendar_day() -> None:
     # Act
     result = parse_date(value)
     # Assert
-    assert result == datetime.date(2026, 9, 14)
+    assert result == dt.date(2026, 9, 14)

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 from dataclasses import dataclass
 from enum import StrEnum
 from typing import TYPE_CHECKING
@@ -42,8 +42,8 @@ class Period(StrEnum):
 
 @dataclass(frozen=True, slots=True)
 class DateRange:
-    start: datetime.datetime
-    end: datetime.datetime
+    start: dt.datetime
+    end: dt.datetime
 
 
 @dataclass(frozen=True, slots=True)
@@ -83,40 +83,40 @@ class ReportQuery:
         }
 
 
-_ONE_SECOND: Final = datetime.timedelta(seconds=1)
+_ONE_SECOND: Final = dt.timedelta(seconds=1)
 
 
-def _start_of_day(moment: datetime.datetime) -> datetime.datetime:
+def _start_of_day(moment: dt.datetime) -> dt.datetime:
     return moment.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
-def _start_of_month(moment: datetime.datetime) -> datetime.datetime:
+def _start_of_month(moment: dt.datetime) -> dt.datetime:
     return _start_of_day(moment).replace(day=1)
 
 
-def _next_month(first_of_month: datetime.datetime) -> datetime.datetime:
-    return (first_of_month + datetime.timedelta(days=32)).replace(day=1)
+def _next_month(first_of_month: dt.datetime) -> dt.datetime:
+    return (first_of_month + dt.timedelta(days=32)).replace(day=1)
 
 
 # The upper bound is the last second of the period, because Clockify treats dateRangeEnd as inclusive.
-def _preset(period: Period, now: datetime.datetime) -> DateRange:
+def _preset(period: Period, now: dt.datetime) -> DateRange:
     today = _start_of_day(now)
-    monday = today - datetime.timedelta(days=today.weekday())
+    monday = today - dt.timedelta(days=today.weekday())
     month = _start_of_month(now)
-    bounds: dict[Period, tuple[datetime.datetime, datetime.datetime]] = {
-        Period.TODAY: (today, today + datetime.timedelta(days=1)),
-        Period.YESTERDAY: (today - datetime.timedelta(days=1), today),
-        Period.THIS_WEEK: (monday, monday + datetime.timedelta(days=7)),
-        Period.LAST_WEEK: (monday - datetime.timedelta(days=7), monday),
+    bounds: dict[Period, tuple[dt.datetime, dt.datetime]] = {
+        Period.TODAY: (today, today + dt.timedelta(days=1)),
+        Period.YESTERDAY: (today - dt.timedelta(days=1), today),
+        Period.THIS_WEEK: (monday, monday + dt.timedelta(days=7)),
+        Period.LAST_WEEK: (monday - dt.timedelta(days=7), monday),
         Period.THIS_MONTH: (month, _next_month(month)),
-        Period.LAST_MONTH: (_start_of_month(month - datetime.timedelta(days=1)), month),
+        Period.LAST_MONTH: (_start_of_month(month - dt.timedelta(days=1)), month),
     }
     start, end = bounds[period]
-    return DateRange(start=start.astimezone(datetime.UTC), end=(end - _ONE_SECOND).astimezone(datetime.UTC))
+    return DateRange(start=start.astimezone(dt.UTC), end=(end - _ONE_SECOND).astimezone(dt.UTC))
 
 
-def resolve_range(selection: ReportSelection, *, now: datetime.datetime | None = None) -> DateRange:
-    local_now = now or datetime.datetime.now().astimezone()
+def resolve_range(selection: ReportSelection, *, now: dt.datetime | None = None) -> DateRange:
+    local_now = now or dt.datetime.now().astimezone()
     explicit = selection.start is not None or selection.end is not None
     if selection.period is not None and explicit:
         message = "--period cannot be combined with --from/--to."
@@ -127,7 +127,7 @@ def resolve_range(selection: ReportSelection, *, now: datetime.datetime | None =
         message = "--to needs --from."
         raise CliError(message, exit_code=ExitCode.USAGE)
     start = parse_instant(selection.start)
-    end = parse_instant(selection.end) if selection.end is not None else local_now.astimezone(datetime.UTC)
+    end = parse_instant(selection.end) if selection.end is not None else local_now.astimezone(dt.UTC)
     if end <= start:
         message = "--to must be after --from."
         raise CliError(message, exit_code=ExitCode.USAGE)
@@ -143,9 +143,7 @@ def _entity_filter(
     return ReportEntityFilter(ids=ids, contains=ReportFilterContains.CONTAINS)
 
 
-def build_query(
-    app_context: AppContext, selection: ReportSelection, *, now: datetime.datetime | None = None
-) -> ReportQuery:
+def build_query(app_context: AppContext, selection: ReportSelection, *, now: dt.datetime | None = None) -> ReportQuery:
     date_range = resolve_range(selection, now=now)
     candidates = {
         "projects": _entity_filter(app_context, selection.projects, resolve_project),

@@ -1,5 +1,5 @@
 import dataclasses
-import datetime
+import datetime as dt
 from dataclasses import dataclass
 from typing import Annotated
 from typing import Final
@@ -49,8 +49,8 @@ def _optional_tag_ids(app_context: AppContext, terms: tuple[str, ...] | None) ->
 @dataclass(frozen=True, slots=True)
 class _ListArgs:
     description: str | None
-    start: datetime.datetime | None
-    end: datetime.datetime | None
+    start: dt.datetime | None
+    end: dt.datetime | None
     project_id: ProjectId | None
     task_id: TaskId | None
     tag_ids: list[TagId] | None
@@ -66,10 +66,10 @@ class _ListOptions:
         typer.Option("--description", help="Substring filter on the entry description."),
     ] = None
     from_: Annotated[
-        datetime.datetime | None,
+        dt.datetime | None,
         typer.Option("--from", help="Lower bound on start, e.g. 2026-09-17T09:00 or 'yesterday 09:00'."),
     ] = None
-    to: Annotated[datetime.datetime | None, typer.Option("--to", help="Upper bound on start.")] = None
+    to: Annotated[dt.datetime | None, typer.Option("--to", help="Upper bound on start.")] = None
     project: Annotated[
         str | None,
         typer.Option("--project", "-P", help="Filter by project ID or exact name."),
@@ -154,8 +154,8 @@ class _CreateArgs:
     task_id: TaskId | None
     tag_ids: list[TagId] | None
     billable: bool
-    start: datetime.datetime | None
-    end: datetime.datetime | None
+    start: dt.datetime | None
+    end: dt.datetime | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -175,10 +175,10 @@ class _CreateOptions:
         typer.Option("--billable/--no-billable", help="Mark the entry as billable."),
     ] = False
     from_: Annotated[
-        datetime.datetime | None,
+        dt.datetime | None,
         typer.Option("--from", help="Start instant; e.g. 2026-09-17T09:00 or 'yesterday 09:00'."),
     ] = None
-    to: Annotated[datetime.datetime | None, typer.Option("--to", help="End instant.")] = None
+    to: Annotated[dt.datetime | None, typer.Option("--to", help="End instant.")] = None
 
 
 @APP.command(help="Create a finished time entry (use `start` for a running entry).")
@@ -211,8 +211,8 @@ class _UpdateArgs:
     task_id: TaskId | None
     tag_ids: list[TagId] | None
     billable: bool | None
-    start: datetime.datetime
-    end: datetime.datetime | None
+    start: dt.datetime
+    end: dt.datetime | None
 
 
 @dataclass(frozen=True, slots=True)
@@ -230,10 +230,10 @@ class _UpdateOptions:
     ] = None
     billable: Annotated[bool | None, typer.Option("--billable/--no-billable", help="Toggle billable.")] = None
     from_: Annotated[
-        datetime.datetime | None,
+        dt.datetime | None,
         typer.Option("--from", help="New start instant; required because Clockify PUT replaces the entry."),
     ] = None
-    to: Annotated[datetime.datetime | None, typer.Option("--to", help="New end instant.")] = None
+    to: Annotated[dt.datetime | None, typer.Option("--to", help="New end instant.")] = None
 
 
 @APP.command(help="Update an existing time entry (start is required by the SDK).")

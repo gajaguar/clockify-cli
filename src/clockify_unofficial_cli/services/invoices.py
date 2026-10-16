@@ -17,7 +17,7 @@ from clockify_unofficial_cli.runtime.errors import CliError
 from clockify_unofficial_cli.runtime.exit_codes import ExitCode
 
 if TYPE_CHECKING:
-    import datetime
+    import datetime as dt
     from collections.abc import Sequence
 
     from clockify import InvoiceDetails
@@ -41,8 +41,8 @@ def _required[T](value: T | None, option: str) -> T:
 class InvoiceChanges:
     number: str | None = None
     currency: str | None = None
-    issued_date: datetime.datetime | None = None
-    due_date: datetime.datetime | None = None
+    issued_date: dt.datetime | None = None
+    due_date: dt.datetime | None = None
     discount: float | None = None
     tax: float | None = None
     tax2: float | None = None

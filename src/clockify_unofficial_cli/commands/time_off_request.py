@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import functools
 from dataclasses import dataclass
 from typing import Annotated
@@ -91,9 +91,7 @@ class _CreateOptions:
     user: Annotated[str | None, typer.Option("--user", help="Request on behalf of this user.")] = None
 
 
-def _period(
-    start: datetime.date, end: datetime.date | None, half_day: TimeOffHalfDayPeriod | None
-) -> TimeOffRequestPeriodRequest:
+def _period(start: dt.date, end: dt.date | None, half_day: TimeOffHalfDayPeriod | None) -> TimeOffRequestPeriodRequest:
     period = TimeOffPeriodRequest(start=start, end=end or start)
     if half_day is None:
         return TimeOffRequestPeriodRequest(period=period)

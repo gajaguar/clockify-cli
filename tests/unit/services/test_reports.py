@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 from typing import Final
 
 import pytest
@@ -17,11 +17,11 @@ from clockify_unofficial_cli.services.reports import flatten_groups
 from clockify_unofficial_cli.services.reports import resolve_range
 
 # A Wednesday, so "this-week" starts two days earlier and "last-week" a week before that.
-NOW: Final = datetime.datetime(2026, 9, 16, 15, 30, tzinfo=datetime.UTC)
+NOW: Final = dt.datetime(2026, 9, 16, 15, 30, tzinfo=dt.UTC)
 
 
-def _utc(*parts: int) -> datetime.datetime:
-    return datetime.datetime(*parts, tzinfo=datetime.UTC)
+def _utc(*parts: int) -> dt.datetime:
+    return dt.datetime(*parts, tzinfo=dt.UTC)
 
 
 @pytest.mark.parametrize(
@@ -55,7 +55,7 @@ def test_resolve_range_defaults_to_this_week() -> None:
 
 def test_resolve_range_last_month_wraps_the_year() -> None:
     # Arrange
-    january = datetime.datetime(2027, 1, 10, tzinfo=datetime.UTC)
+    january = dt.datetime(2027, 1, 10, tzinfo=dt.UTC)
     # Act
     result = resolve_range(ReportSelection(period=Period.LAST_MONTH), now=january)
     # Assert

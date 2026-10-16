@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -27,13 +27,13 @@ class TimerRequest:
     task_id: TaskId | None
     tag_ids: tuple[TagId, ...]
     billable: bool
-    start: datetime.datetime | None
-    end: datetime.datetime | None
-    duration: datetime.timedelta | None
+    start: dt.datetime | None
+    end: dt.datetime | None
+    duration: dt.timedelta | None
 
 
-def _now() -> datetime.datetime:
-    return datetime.datetime.now(datetime.UTC)
+def _now() -> dt.datetime:
+    return dt.datetime.now(dt.UTC)
 
 
 def start_timer(app_context: AppContext, request: TimerRequest) -> object:
@@ -50,7 +50,7 @@ def start_timer(app_context: AppContext, request: TimerRequest) -> object:
     return app_context.workspace().time_entries.start(app_context.user_id(), payload)
 
 
-def stop_timer(app_context: AppContext, *, end: datetime.datetime | None) -> object:
+def stop_timer(app_context: AppContext, *, end: dt.datetime | None) -> object:
     return app_context.workspace().time_entries.stop(app_context.user_id(), end=end)
 
 
@@ -71,9 +71,9 @@ class LogRequest:
     task_id: TaskId | None
     tag_ids: tuple[TagId, ...]
     billable: bool
-    start: datetime.datetime | None
-    end: datetime.datetime | None
-    duration: datetime.timedelta | None
+    start: dt.datetime | None
+    end: dt.datetime | None
+    duration: dt.timedelta | None
 
 
 def log_entry(
@@ -103,13 +103,13 @@ def log_entry(
     return app_context.workspace().time_entries.create(payload)
 
 
-def parse_optional_duration(value: str | None) -> datetime.timedelta | None:
+def parse_optional_duration(value: str | None) -> dt.timedelta | None:
     if value is None:
         return None
     return parse_duration(value)
 
 
-def parse_optional_instant(value: str | None) -> datetime.datetime | None:
+def parse_optional_instant(value: str | None) -> dt.datetime | None:
     if value is None:
         return None
     return parse_instant(value)
