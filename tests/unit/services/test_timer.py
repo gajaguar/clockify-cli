@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 from unittest.mock import MagicMock
 
 import pytest
@@ -31,7 +31,7 @@ class _FakeEntries:
         self.sent.append((user_id, {"start": payload}))
         return MagicMock()
 
-    def stop(self, user_id: object, end: datetime.datetime | None = None) -> object:
+    def stop(self, user_id: object, end: dt.datetime | None = None) -> object:
         self.sent.append((user_id, {"stop": end}))
         return MagicMock()
 
@@ -56,7 +56,7 @@ def _app_context(entries: list[object]) -> AppContext:
 def test_start_timer_sends_payload() -> None:
     # Arrange
     context = _app_context([])
-    start = datetime.datetime(2026, 9, 17, 9, 0, tzinfo=datetime.UTC)
+    start = dt.datetime(2026, 9, 17, 9, 0, tzinfo=dt.UTC)
     request = TimerRequest(
         description="spike",
         project_id=None,
@@ -110,13 +110,13 @@ def test_start_timer_defaults_start_to_now() -> None:
     expected_payload = sent[0][1]["start"]
     assert sent == [("user-1", {"start": expected_payload})]
     assert expected_payload.description == "now"
-    assert expected_payload.start.tzinfo == datetime.UTC
+    assert expected_payload.start.tzinfo == dt.UTC
 
 
 def test_stop_timer_passes_end() -> None:
     # Arrange
     context = _app_context([])
-    end = datetime.datetime(2026, 9, 17, 10, 0, tzinfo=datetime.UTC)
+    end = dt.datetime(2026, 9, 17, 10, 0, tzinfo=dt.UTC)
     # Act
     stop_timer(context, end=end)
     # Assert
@@ -148,8 +148,8 @@ def test_running_entry_returns_none_when_empty() -> None:
 def test_log_entry_with_start_and_end() -> None:
     # Arrange
     context = _app_context([])
-    start = datetime.datetime(2026, 9, 17, 9, 0, tzinfo=datetime.UTC)
-    end = datetime.datetime(2026, 9, 17, 10, 0, tzinfo=datetime.UTC)
+    start = dt.datetime(2026, 9, 17, 9, 0, tzinfo=dt.UTC)
+    end = dt.datetime(2026, 9, 17, 10, 0, tzinfo=dt.UTC)
     request = LogRequest(
         description="log",
         project_id=None,

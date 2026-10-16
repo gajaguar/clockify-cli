@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import mimetypes
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
@@ -91,7 +91,7 @@ def build_update(current: Expense, changes: ExpenseChanges) -> ExpenseUpdate:
     return ExpenseUpdate(
         user_id=current.user_id,  # type: ignore[arg-type]
         category_id=changes.category_id or current.category_id,  # type: ignore[arg-type]
-        date=parse_instant(when) if when else datetime.datetime.now(datetime.UTC),
+        date=parse_instant(when) if when else dt.datetime.now(dt.UTC),
         amount=changes.amount if changes.amount is not None else current.total or 0.0,
         change_fields=changed,
         **{key: value for key, value in optional.items() if value is not None},  # type: ignore[arg-type]

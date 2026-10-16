@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import re
 from typing import Final
 
@@ -19,7 +19,7 @@ _RELATIVE_RE: Final[re.Pattern[str]] = re.compile(_RELATIVE_PATTERN)
 _DAY_KEYWORDS: Final[frozenset[str]] = frozenset({"today", "tomorrow", "yesterday"})
 
 
-def parse_duration(value: str) -> datetime.timedelta:
+def parse_duration(value: str) -> dt.timedelta:
     raw = value.strip()
     if not raw:
         message = f"Invalid duration '{value}'."
@@ -32,28 +32,28 @@ def parse_duration(value: str) -> datetime.timedelta:
     raise CliError(message, exit_code=ExitCode.USAGE)
 
 
-def _parse_compact_duration(value: str) -> datetime.timedelta:
+def _parse_compact_duration(value: str) -> dt.timedelta:
     match = _DURATION_RE.match(value)
     if match is None:
         message = f"Invalid duration '{value}'."
         raise CliError(message, exit_code=ExitCode.USAGE)
-    return datetime.timedelta(
+    return dt.timedelta(
         hours=int(match.group(1) or 0),
         minutes=int(match.group(2) or 0),
         seconds=int(match.group(3) or 0),
     )
 
 
-def _parse_clock_duration(value: str) -> datetime.timedelta:
+def _parse_clock_duration(value: str) -> dt.timedelta:
     match = _CLOCK_RE.match(value)
     if match is None:
         message = f"Invalid duration '{value}'."
         raise CliError(message, exit_code=ExitCode.USAGE)
     hours, minutes, seconds = match.groups()
-    return datetime.timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds or 0))
+    return dt.timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds or 0))
 
 
-def parse_instant(value: str) -> datetime.datetime:
+def parse_instant(value: str) -> dt.datetime:
     raw = value.strip()
     if not raw:
         message = f"Invalid instant '{value}'."
@@ -69,22 +69,22 @@ def parse_instant(value: str) -> datetime.datetime:
     return _resolve_absolute(raw)
 
 
-def _today_at(time_str: str) -> datetime.datetime:
-    today = datetime.datetime.now(datetime.UTC).date()
+def _today_at(time_str: str) -> dt.datetime:
+    today = dt.datetime.now(dt.UTC).date()
     hour, minute = _parse_clock(time_str)
-    return datetime.datetime(today.year, today.month, today.day, hour, minute, tzinfo=datetime.UTC)
+    return dt.datetime(today.year, today.month, today.day, hour, minute, tzinfo=dt.UTC)
 
 
-def _day_keyword_at(keyword: str, time_str: str) -> datetime.datetime:
-    today = datetime.datetime.now(datetime.UTC).date()
+def _day_keyword_at(keyword: str, time_str: str) -> dt.datetime:
+    today = dt.datetime.now(dt.UTC).date()
     if keyword == "today":
         target = today
     elif keyword == "tomorrow":
-        target = today + datetime.timedelta(days=1)
+        target = today + dt.timedelta(days=1)
     else:
-        target = today - datetime.timedelta(days=1)
+        target = today - dt.timedelta(days=1)
     hour, minute = _parse_clock(time_str)
-    return datetime.datetime(target.year, target.month, target.day, hour, minute, tzinfo=datetime.UTC)
+    return dt.datetime(target.year, target.month, target.day, hour, minute, tzinfo=dt.UTC)
 
 
 def _parse_clock(value: str) -> tuple[int, int]:
@@ -96,26 +96,26 @@ def _parse_clock(value: str) -> tuple[int, int]:
     return int(hours), int(minutes)
 
 
-def _resolve_relative(value: str) -> datetime.datetime:
+def _resolve_relative(value: str) -> dt.datetime:
     sign, amount, unit = _RELATIVE_RE.match(value).groups()  # type: ignore[union-attr]
-    delta = datetime.timedelta(hours=int(amount)) if unit == "h" else datetime.timedelta(minutes=int(amount))
+    delta = dt.timedelta(hours=int(amount)) if unit == "h" else dt.timedelta(minutes=int(amount))
     if sign == "-":
         delta = -delta
-    return datetime.datetime.now(datetime.UTC) + delta
+    return dt.datetime.now(dt.UTC) + delta
 
 
-def _resolve_absolute(value: str) -> datetime.datetime:
+def _resolve_absolute(value: str) -> dt.datetime:
     try:
-        parsed = datetime.datetime.fromisoformat(value)
+        parsed = dt.datetime.fromisoformat(value)
     except ValueError as exc:
         message = f"Invalid instant '{value}'."
         raise CliError(message, exit_code=ExitCode.USAGE) from exc
     if parsed.tzinfo is None:
-        return parsed.replace(tzinfo=datetime.UTC)
-    return parsed.astimezone(datetime.UTC)
+        return parsed.replace(tzinfo=dt.UTC)
+    return parsed.astimezone(dt.UTC)
 
 
-def parse_date(value: str) -> datetime.date:
+def parse_date(value: str) -> dt.date:
     return parse_instant(value).date()
 
 
