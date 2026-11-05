@@ -62,7 +62,22 @@ load-plugins = ["pylint_gajaguar"]
 
 [tool.pylint."messages control"]
 disable = ["all"]
-enable = ["gajaguar"]
+enable = [
+  "gajaguar-no-docstrings",
+  "gajaguar-test-aaa-markers",
+  "gajaguar-test-no-blank-lines",
+  "gajaguar-unused-arg-use-del",
+  "gajaguar-module-const-naming",
+  "gajaguar-no-file-level-disable",
+  "gajaguar-no-inline-imports",
+  "gajaguar-no-relative-imports",
+  "gajaguar-use-contextlib-suppress",
+  "gajaguar-frozenset-constant",
+  "gajaguar-require-final",
+  "gajaguar-test-no-extra-comments",
+  "gajaguar-test-partial-assertion",
+  "gajaguar-test-name-implementation-detail",
+]
 
 [tool.pyright]
 include = ["src"]
@@ -70,9 +85,9 @@ include = ["src"]
 [dependency-groups]
 dev = [
   "conventional-git>=1.3",
+  "ferrolint>=1.1",
   "mypy>=2.3.1",
-  "pylint-gajaguar>=2.0.2",
-  "pylint>=4.0.9",
+  "pylint-gajaguar>=3.0",
   "pyright>=1.1.414",
   "pytest-cov>=7.1",
   "pytest>=9.1",
